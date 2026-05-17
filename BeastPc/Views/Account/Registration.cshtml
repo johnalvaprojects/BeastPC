@@ -1,0 +1,168 @@
+@{
+    ViewBag.Title = "Registration";
+    Layout = "~/Views/Shared/_RegistrationLayout.cshtml";
+}
+
+@section styles {
+<style>
+    .beast-field-hint { font-size: 0.85rem; color: #7f1d1d; letter-spacing: 0.04em; margin-top: 0.25rem; }
+    .beast-field-error { border-color: #7f1d1d !important; }
+    .beast-success-backdrop {
+        position: fixed; inset: 0; z-index: 60;
+        background: rgba(0,0,0,0.45);
+        display: flex; align-items: center; justify-content: center; padding: 1rem;
+    }
+    .beast-success-modal {
+        max-width: 420px; width: 100%;
+        background: #fff;
+        color: #000;
+        border: 2px solid #000;
+        box-shadow: 8px 8px 0 #000;
+        padding: 1.75rem 1.5rem 1.5rem;
+    }
+    .beast-success-kicker {
+        font-size: 0.78rem; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(0,0,0,0.42);
+        margin-bottom: 0.6rem;
+    }
+    .beast-success-title {
+        font-size: 1.6rem; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.75rem;
+        color: #000;
+    }
+    .beast-success-body {
+        font-size: 1rem; line-height: 1.45; color: rgba(0,0,0,0.65); margin-bottom: 1.25rem;
+    }
+    .beast-success-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .beast-success-btn {
+        flex: 1; min-width: 140px;
+        padding: 0.65rem 1rem;
+        border: 2px solid #000;
+        background: #000;
+        color: #fff;
+        font-family: 'VT323', monospace !important;
+        font-size: 1rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+    .beast-success-btn.secondary {
+        background: #fff;
+        color: #000;
+    }
+    .beast-success-btn:hover { background: #f3f4f6; color: #000; }
+    .beast-success-btn.secondary:hover { background: #e5e7eb; }
+</style>
+}
+
+<div class="flex min-h-screen" ng-app="BeastPc" ng-controller="BeastPcController">
+
+    <div class="flex-1 bg-white relative overflow-y-auto flex flex-col justify-center min-h-screen px-8 lg:px-16 xl:px-24 py-8">
+        <!-- Back / Login link -->
+        <div class="absolute top-6 left-6 z-10">
+            <a href="@Url.Action("LoginPage", "Account")" class="flex items-center text-gray-600 transition-colors z-10 link-hover-dark" title="Login">&#8592; Login</a>
+        </div>
+
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2 custom-font-title">Registration</h1>
+            <p class="text-gray-600 custom-font-subtitle">Add users and manage them below.</p>
+        </div>
+
+        <!-- Form :3 -->
+        <div class="space-y-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2 custom-font-label">First Name</label>
+                <input type="text" class="w-full px-4 py-3 border-2 border-black focus:outline-none transition-colors custom-font-body"
+                       ng-class="{'beast-field-error': fieldErrors.FName}"
+                       ng-model="FName" placeholder="First name" maxlength="80" autocomplete="given-name" />
+                <div class="beast-field-hint" ng-show="fieldErrors.FName">{{fieldErrors.FName}}</div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2 custom-font-label">Last Name</label>
+                <input type="text" class="w-full px-4 py-3 border-2 border-black focus:outline-none transition-colors custom-font-body"
+                       ng-class="{'beast-field-error': fieldErrors.LName}"
+                       ng-model="LName" placeholder="Last name" maxlength="80" autocomplete="family-name" />
+                <div class="beast-field-hint" ng-show="fieldErrors.LName">{{fieldErrors.LName}}</div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2 custom-font-label">Username</label>
+                <input type="text" class="w-full px-4 py-3 border-2 border-black focus:outline-none transition-colors custom-font-body"
+                       ng-class="{'beast-field-error': fieldErrors.Username}"
+                       ng-model="Username" placeholder="3–32 letters, numbers, underscore" maxlength="32" pattern="^[A-Za-z0-9_]{3,32}$" autocomplete="username" />
+                <div class="beast-field-hint" ng-show="fieldErrors.Username">{{fieldErrors.Username}}</div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2 custom-font-label">Email</label>
+                <input type="email" class="w-full px-4 py-3 border-2 border-black focus:outline-none transition-colors custom-font-body"
+                       ng-class="{'beast-field-error': fieldErrors.Email}"
+                       ng-model="Email" placeholder="you@example.com" maxlength="254" autocomplete="email" />
+                <div class="beast-field-hint" ng-show="fieldErrors.Email">{{fieldErrors.Email}}</div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2 custom-font-label">Password</label>
+                <input type="password" class="w-full px-4 py-3 border-2 border-black focus:outline-none transition-colors custom-font-body"
+                       ng-class="{'beast-field-error': fieldErrors.Password}"
+                       ng-model="Password" placeholder="8–128 characters" maxlength="128" autocomplete="new-password" />
+                <div class="beast-field-hint" ng-show="fieldErrors.Password">{{fieldErrors.Password}}</div>
+            </div>
+            <div class="flex gap-3">
+                <button type="button" class="flex-1 bg-black text-white py-3 px-4 border-2 border-black font-medium hover:bg-white hover:text-black focus:outline-none transition-all custom-font-button"
+                        ng-click="addFunc()">Register</button>
+                <button type="button" class="flex-1 py-3 px-4 border-2 border-black font-medium focus:outline-none transition-all custom-font-button btn-beast-secondary"
+                        ng-click="clearFunc()">Clear</button>
+            </div>
+
+            <!-- Success modal -->
+            <div ng-show="showRegSuccess" class="beast-success-backdrop" role="dialog" aria-modal="true" aria-labelledby="reg-success-title">
+                <div class="beast-success-modal">
+                    <div class="beast-success-kicker">BeastPC</div>
+                    <h2 id="reg-success-title" class="beast-success-title custom-font-title">You're in</h2>
+                    <p class="beast-success-body custom-font-body">Account created successfully. You can continue to the login page whenever you're ready.</p>
+                    <div class="beast-success-actions">
+                        <button type="button" class="beast-success-btn" ng-click="closeRegSuccess(true)">Go to login</button>
+                        <button type="button" class="beast-success-btn secondary" ng-click="closeRegSuccess(false)">Stay here</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clear confirmation modal (our design) -->
+            <div ng-show="showClearConfirm" class="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="clear-modal-title">
+                <div class="absolute inset-0 bg-black/50" ng-click="cancelClear()"></div>
+                <div class="relative bg-white border-2 border-black shadow-lg max-w-sm w-full p-6 custom-font-body">
+                    <h2 id="clear-modal-title" class="text-xl font-bold text-gray-900 mb-4 custom-font-title">Clear form?</h2>
+                    <p class="text-gray-700 mb-6">Clear all form fields?</p>
+                    <div class="flex gap-3">
+                        <button type="button" class="flex-1 py-2 px-4 border-2 border-black font-medium custom-font-button btn-beast"
+                                ng-click="confirmClear()">Yes, clear</button>
+                        <button type="button" class="flex-1 py-2 px-4 border-2 border-black font-medium custom-font-button btn-beast-secondary"
+                                ng-click="cancelClear()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-show="accountAlert.show" class="bp-auth-modal-overlay" role="dialog" aria-modal="true" ng-click="dismissAccountAlert()">
+                <div class="bp-auth-modal" ng-click="$event.stopPropagation()">
+                    <div class="bp-auth-modal-kicker">BeastPC</div>
+                    <h2 class="bp-auth-modal-title custom-font-title">Notice</h2>
+                    <p class="bp-auth-modal-body custom-font-body">{{accountAlert.message}}</p>
+                    <button type="button" class="bp-auth-modal-ok custom-font-button" ng-click="dismissAccountAlert()">OK</button>
+                </div>
+            </div>
+            <button type="button" class="w-full mt-4 py-3 px-4 border-2 border-black font-medium focus:outline-none transition-all custom-font-button btn-beast-secondary"
+                    ng-click="redirectFunc()" ng-show="showLogin">Go to Login Page</button>
+        </div>
+    </div>
+
+    <div class="hidden lg:flex lg:flex-1 relative overflow-hidden bg-black">
+        <video autoplay loop muted playsinline preload="auto" class="absolute inset-0 w-full h-full object-cover">
+            <source src="@Url.Content("~/Content/video/ryzen vid.mp4")" type="video/mp4" />
+            Your browser does not support the video tag.
+        </video>
+    </div>
+</div>
+
+@section scripts {
+    <script src="@Url.Content("~/Scripts/angular.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/BeastPc/Module.js")"></script>
+    <script src="@Url.Content("~/Scripts/BeastPc/Service.js")"></script>
+    <script src="@Url.Content("~/Scripts/BeastPc/Controller.js")"></script>
+}

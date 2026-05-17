@@ -1,0 +1,27 @@
+@{
+    ViewBag.Title = "Welcome";
+    Layout = "~/Views/Shared/_RegistrationLayout.cshtml";
+}
+
+<div class="flex min-h-screen" ng-app="BeastPc" ng-controller="BeastPcController" ng-init="loadCurrentUser()">
+    <div class="flex-1 bg-white relative flex flex-col justify-center items-center px-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2 custom-font-title">WELCOME!</h1>
+        <p class="text-2xl text-gray-800 mb-12 custom-font-body">
+            {{ ((currentUser.FirstName || currentUser.FName || '') + ' ' + (currentUser.LastName || currentUser.LName || '')).trim() || 'User' }}
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+            <a href="@Url.Action("LoginPage", "Account")" class="btn-beast-secondary text-center px-6 py-3 min-w-[7rem] whitespace-nowrap">LOGIN</a>
+            <a href="@Url.Action("MyAccount", "Account")" class="btn-beast-secondary text-center px-6 py-3 min-w-[7rem] whitespace-nowrap">ACCOUNT</a>
+            <a href="@Url.Action("Table", "Account")" class="btn-beast text-center px-6 py-3 min-w-[7rem] whitespace-nowrap">URM</a>
+            <a href="@Url.Action("Registration", "Account")" class="btn-beast text-center px-6 py-3 min-w-[7rem] whitespace-nowrap">REGU</a>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="@Url.Content("~/Scripts/angular.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/BeastPc/Module.js")"></script>
+    <script src="@Url.Content("~/Scripts/BeastPc/Service.js")"></script>
+    <script src="@Url.Content("~/Scripts/BeastPc/Controller.js")"></script>
+}

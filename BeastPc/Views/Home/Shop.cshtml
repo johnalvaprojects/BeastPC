@@ -1,0 +1,1821 @@
+@{
+    ViewBag.Title = "Shop";
+    Layout = "~/Views/Shared/_HomeFooterLayout.cshtml";
+}
+
+@* ================== FIXED UI: HAMBURGER MENU + CART BUTTON ================== *@
+<div class="landing-menu-wrap">
+    <span class="landing-menu-label">OPEN</span>
+    <button type="button" class="landing-menu" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+</div>
+
+<div class="cart-button" aria-label="Cart">
+    <div class="cart-button__label-wrap">
+        <img class="cart-button__icon" src="@Url.Content("~/Content/images/shopping-cart.png")" alt="Cart" />
+    </div>
+    <div class="cart-button__number-wrap">
+        <span class="cart-button__number-bg"></span>
+        <span class="cart-button__number">0</span>
+    </div>
+</div>
+
+@* ================== NAV OVERLAY PANEL (same as homepage) ================== *@
+<div class="landing-transition-overlay">
+    <div class="landing-nav-panel">
+        <div class="landing-nav-left">
+            <video class="landing-nav-media" autoplay muted loop playsinline>
+                <source src="@Url.Content("~/Content/video/navbar/BlackTopoDesktop.mp4")" type="video/mp4" />
+            </video>
+        </div>
+        <div class="landing-nav-right">
+            <div class="landing-nav-header">
+                <span class="landing-nav-title"></span>
+                <div class="landing-nav-header-right">
+                    <button type="button" class="landing-nav-close" aria-label="Close navigation">
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <span class="landing-nav-close-label">CLOSE</span>
+                </div>
+            </div>
+            <ol class="landing-nav-main">
+                <li>
+                    <span class="landing-nav-index">01</span>
+                    <a class="landing-nav-label" href="@Url.Action("Index", "Home")">HOME</a>
+                    <span class="landing-nav-plus">+</span>
+                </li>
+                <li>
+                    <span class="landing-nav-index">02</span>
+                    <a class="landing-nav-label" id="navAuthLink" href="@Url.Action("LoginPage", "Account")">LOGIN</a>
+                    <span class="landing-nav-plus">+</span>
+                </li>
+                <li>
+                    <span class="landing-nav-index">03</span>
+                    <a class="landing-nav-label" href="@Url.Action("Shop", "Home")">SHOP</a>
+                    <span class="landing-nav-plus">+</span>
+                </li>
+                <li>
+                    <span class="landing-nav-index">04</span>
+                    <a class="landing-nav-label" href="@Url.Action("About", "Home")">ABOUT</a>
+                    <span class="landing-nav-plus">+</span>
+                </li>
+                <li>
+                    <span class="landing-nav-index">05</span>
+                    <a class="landing-nav-label" href="@Url.Action("Contact", "Home")">CONTACT</a>
+                    <span class="landing-nav-plus">+</span>
+                </li>
+                <li id="adminNavLink" style="display:none">
+                    <span class="landing-nav-index">06</span>
+                    <a class="landing-nav-label" href="@Url.Action("Dashboard", "Admin")">ADMIN</a>
+                    <span class="landing-nav-plus">+</span>
+                </li>
+            </ol>
+            <div class="landing-nav-meta">
+                <div class="landing-nav-column">
+                    <span class="landing-nav-footer-title">FOLLOW</span>
+                    <span class="landing-nav-footer-item">Instagram</span>
+                    <span class="landing-nav-footer-item">YouTube</span>
+                </div>
+                <div class="landing-nav-column">
+                    <span class="landing-nav-footer-title">CONTACT</span>
+                    <span class="landing-nav-footer-item">info@@beastpc.local</span>
+                </div>
+            </div>
+            <div class="landing-nav-footer">
+                <span class="landing-nav-footer-brand">BEASTPC</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ================== BUILDS GRID (Janis Sne style + product animation hooks) ================== *@
+<section class="jsne-page">
+    <div class="products__list jsne-grid" id="buildsGrid">
+        <div style="grid-column:1/-1;color:rgba(255,255,255,0.45);letter-spacing:0.14em;text-transform:uppercase;font-size:0.7rem;padding:2.4rem 0;text-align:center;">
+            Loading catalog…
+        </div>
+    </div>
+</section>
+
+@* ================== CART WIPE PANEL (Osmo-style) ================== *@
+<div data-cart="closed" class="cart-nav">
+    <div data-cart-toggle class="cart-overlay"></div>
+    <aside class="cart-menu">
+        <div class="cart-menu-bg">
+            <div class="bg-panel first"></div>
+            <div class="bg-panel second"></div>
+            <div class="bg-panel third"></div>
+        </div>
+        <div class="cart-menu-inner">
+            <div class="cart-menu-head">
+                <span class="cart-menu-eyebrow" data-cart-fade>YOUR CART</span>
+                <button type="button" class="cart-menu-close" data-cart-toggle aria-label="Close cart">
+                    <span></span><span></span>
+                </button>
+            </div>
+            <ul class="cart-menu-list">
+                <li class="cart-menu-empty" data-cart-empty>
+                    <p class="cart-menu-empty-title">Cart is empty</p>
+                    <p class="cart-menu-empty-sub" data-cart-fade>
+                        Click the <span class="cart-menu-plus">+</span> on any system to add it here.
+                    </p>
+                </li>
+            </ul>
+            <div class="cart-menu-foot" data-cart-foot>
+                <div class="cart-menu-total-row">
+                    <span data-cart-fade>Total</span>
+                    <span class="cart-menu-total" data-cart-fade>&#8369;0</span>
+                </div>
+                <button type="button" class="cart-menu-checkout" data-cart-fade>Checkout</button>
+            </div>
+        </div>
+    </aside>
+</div>
+
+@* ================== REPEATING IMAGE TRANSITION PANEL (Codrops-style) ================== *@
+<figure class="rit-panel" role="dialog" aria-modal="true" aria-label="System preview">
+    <div class="rit-panel__img"></div>
+    <figcaption class="rit-panel__content">
+        <div class="rit-panel__intro">
+            <span class="rit-panel__eyebrow">BEASTPC / READY-TO-SHIP</span>
+            <h3 class="rit-panel__title">SYSTEM</h3>
+            <p class="rit-panel__desc">Preview</p>
+        </div>
+
+        <dl class="rit-panel__specs">
+            <div class="rit-spec" data-spec-key="cpu"><dt>CPU</dt><dd data-spec="cpu">—</dd></div>
+            <div class="rit-spec" data-spec-key="gpu"><dt>GPU</dt><dd data-spec="gpu">—</dd></div>
+            <div class="rit-spec" data-spec-key="ram"><dt>RAM</dt><dd data-spec="ram">—</dd></div>
+            <div class="rit-spec" data-spec-key="storage"><dt>Storage</dt><dd data-spec="storage">—</dd></div>
+            <div class="rit-spec" data-spec-key="cooling"><dt>Cooling</dt><dd data-spec="cooling">—</dd></div>
+            <div class="rit-spec" data-spec-key="psu"><dt>PSU</dt><dd data-spec="psu">—</dd></div>
+            <div class="rit-spec" data-spec-key="case"><dt>Case</dt><dd data-spec="case">—</dd></div>
+        </dl>
+
+        <div class="rit-panel__bottom">
+            <div class="rit-panel__footer">
+                <span class="rit-panel__price">&#8369;0</span>
+                <div class="rit-panel__actions">
+                    <button type="button" class="rit-panel__add" data-action="add">Add to cart</button>
+                    <button type="button" class="rit-panel__close" aria-label="Close preview">Close</button>
+                </div>
+            </div>
+            <div class="rit-panel__trust" aria-label="Shipping and warranty">
+                <div class="rit-panel__trust-row">
+                    <span class="rit-panel__trust-mark" aria-hidden="true">✓</span>
+                    <span><strong>1-year limited warranty</strong> on covered parts and labor. Email support for setup questions.</span>
+                </div>
+                <div class="rit-panel__trust-row">
+                    <span class="rit-panel__trust-mark" aria-hidden="true">✓</span>
+                    <span><strong>Secure packing &amp; insured shipping</strong> within the Philippines. Tracking sent when your order ships.</span>
+                </div>
+            </div>
+        </div>
+    </figcaption>
+</figure>
+
+@section styles {
+<style>
+    /* ========== Fonts (match homepage) ========== */
+    @@font-face {
+        font-family: 'OrithDisplay';
+        src: url('@Url.Content("~/Content/fonts/orith-font/orithdisplay-regular.otf")') format("opentype");
+        font-weight: 400;
+        font-style: normal;
+    }
+    @@font-face {
+        font-family: 'Inter Display';
+        src: url('@Url.Content("~/Content/fonts/Inter-4.1/extras/otf/InterDisplay-Medium.otf")') format("opentype");
+        font-weight: 500;
+        font-style: normal;
+    }
+    @@font-face {
+        font-family: 'Bebas Neue';
+        src: url('@Url.Content("~/Content/fonts/bebas_neue/BebasNeue-Regular.otf")') format("opentype");
+        font-weight: 400;
+        font-style: normal;
+    }
+
+    /* ========== Nav menu (hamburger trigger) ========== */
+    .landing-menu-wrap {
+        position: fixed;
+        top: 3.5%;
+        right: 3%;
+        z-index: 140;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.45rem;
+    }
+    .landing-menu-label {
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.9);
+        opacity: 0;
+        transform: translateX(-6px);
+        transition: opacity 0.22s ease-out, transform 0.22s ease-out;
+        font-family: 'Inter Display', system-ui, sans-serif;
+    }
+    .landing-menu-wrap:hover .landing-menu-label {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    .landing-menu {
+        width: 2.5rem;
+        height: 2.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: rgba(255,255,255,0.9);
+    }
+    .landing-menu-wrap:hover .landing-menu { color: #fff; }
+    .landing-menu span {
+        display: block;
+        width: 1.5rem;
+        height: 2px;
+        background: currentColor;
+        border-radius: 1px;
+    }
+
+    /* ========== Nav overlay panel ========== */
+    .landing-transition-overlay {
+        position: fixed;
+        inset: 0;
+        background: #000;
+        opacity: 0;
+        pointer-events: none;
+        clip-path: inset(100% 0% 0% 0%);
+        z-index: 150;
+        transition: none;
+    }
+    .landing-nav-panel {
+        position: absolute;
+        inset: 1.2rem 1.4rem;
+        border-radius: 38px;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: minmax(0, 0.45fr) minmax(0, 0.55fr);
+        color: #111111;
+        font-family: 'Inter Display', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, rgba(16,16,16,0.96), rgba(5,5,5,0.98));
+        box-shadow: 0 28px 80px rgba(0,0,0,0.9);
+    }
+    .landing-nav-left {
+        position: relative;
+        padding: 0;
+        display: flex;
+        align-items: stretch;
+        justify-content: stretch;
+    }
+    .landing-nav-media {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .landing-nav-right {
+        position: relative;
+        padding: 3.4rem 2.8rem 2.4rem 1.8rem;
+        overflow: hidden;
+        background: #ffffff;
+    }
+    .landing-nav-header {
+        position: absolute;
+        top: 1.4rem;
+        left: 1.8rem;
+        right: 2.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-size: 0.62rem;
+    }
+    .landing-nav-title { display: none; }
+    .landing-nav-header-right {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        gap: 0.45rem;
+    }
+    .landing-nav-close {
+        position: relative;
+        width: 1.6rem;
+        height: 1.6rem;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+    }
+    .landing-nav-close span {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 1rem;
+        height: 1px;
+        background: rgba(0,0,0,0.75);
+        transform-origin: center;
+        transition: transform 0.22s ease-out;
+    }
+    .landing-nav-close span:first-child { transform: translate(-50%, -50%) rotate(45deg); }
+    .landing-nav-close span:last-child  { transform: translate(-50%, -50%) rotate(-45deg); }
+    .landing-nav-close-label {
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #111111;
+        opacity: 0;
+        transform: translateX(6px);
+        transition: opacity 0.22s ease-out, transform 0.22s ease-out;
+    }
+    .landing-nav-header-right:hover .landing-nav-close-label { opacity: 1; transform: translateX(0); }
+    .landing-nav-header-right:hover .landing-nav-close span:first-child { transform: translate(-50%, -50%) rotate(0deg); }
+    .landing-nav-header-right:hover .landing-nav-close span:last-child  { transform: translate(-50%, -50%) rotate(90deg); }
+
+    .landing-nav-main {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        position: absolute;
+        left: 1.8rem;
+        right: 2.8rem;
+        top: 40%;
+        transform: translateY(-40%);
+    }
+    .landing-nav-main li {
+        display: grid;
+        grid-template-columns: 3.2rem auto 1.4rem;
+        align-items: center;
+        padding: 0.45rem 0;
+        border-bottom: 1px solid rgba(0,0,0,0.06);
+        cursor: pointer;
+    }
+    .landing-nav-index {
+        font-size: 1.36rem;
+        letter-spacing: 0.16em;
+        color: #111111;
+    }
+    .landing-nav-label {
+        font-size: 1.56rem;
+        letter-spacing: 0.09em;
+        color: #111111;
+        transform-origin: left center;
+        transition: transform 0.25s ease-out;
+        text-decoration: none;
+    }
+    .landing-nav-plus {
+        justify-self: end;
+        font-size: 0.85rem;
+        opacity: 1;
+        color: #111111;
+    }
+    .landing-nav-main li:hover .landing-nav-label { transform: scale(1.08); }
+    .landing-nav-meta {
+        position: absolute;
+        left: 1.8rem;
+        right: 2.8rem;
+        top: 61%;
+        display: flex;
+        gap: 3rem;
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+    .landing-nav-column {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+    .landing-nav-footer-title { color: #111111; }
+    .landing-nav-footer-item  { color: #111111; }
+    .landing-nav-footer {
+        position: absolute;
+        left: 1.8rem;
+        right: 2.8rem;
+        bottom: 1.8rem;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-end;
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+    .landing-nav-footer-brand {
+        font-family: 'OrithDisplay', cursive;
+        font-size: 2.4rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #111111;
+        padding-top: 0.4rem;
+        padding-bottom: 0.4rem;
+    }
+
+    /* ========== Shared gradient thumbnails ========== */
+    .jsne-page {
+        min-height: 100vh;
+        background: #000;
+        color: #fff;
+        padding: 5.5rem 1.2rem 3rem 1.2rem;
+    }
+    .jsne-grid {
+        list-style: none;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.6rem;
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+    .jsne-card {
+        display: block;
+        position: relative;
+    }
+    .products__images {
+        position: relative;
+    }
+    .jsne-thumb,
+    .products__main-image {
+        aspect-ratio: 1 / 1;
+        width: 100%;
+        background-color: #0b0b0b;
+        background-size: cover;
+        background-position: center;
+        filter: grayscale(0.06) contrast(1.02);
+        transition: transform 0.5s ease, filter 0.5s ease;
+    }
+    .jsne-card:hover .products__main-image {
+        transform: scale(1.015);
+        filter: grayscale(0) contrast(1.05);
+    }
+    .jsne-thumb-1 {
+        background-image:
+            radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), transparent 55%),
+            radial-gradient(circle at 70% 70%, rgba(255,59,59,0.15), transparent 55%),
+            linear-gradient(135deg, #1a1a1a, #050505);
+    }
+    .jsne-thumb-2 {
+        background-image:
+            radial-gradient(circle at 60% 20%, rgba(0,229,255,0.12), transparent 55%),
+            linear-gradient(135deg, #0f0f12, #05060a);
+    }
+    .jsne-thumb-3 {
+        background-image:
+            radial-gradient(circle at 40% 60%, rgba(127,93,255,0.14), transparent 55%),
+            linear-gradient(135deg, #111012, #070608);
+    }
+    .jsne-thumb-4 {
+        background-image:
+            radial-gradient(circle at 20% 80%, rgba(255,159,28,0.14), transparent 55%),
+            linear-gradient(135deg, #141212, #080606);
+    }
+    .jsne-thumb-5 {
+        background-image:
+            radial-gradient(circle at 70% 40%, rgba(0,255,170,0.10), transparent 55%),
+            linear-gradient(135deg, #0c1210, #050707);
+    }
+    .jsne-thumb-6 {
+        background-image:
+            radial-gradient(circle at 30% 70%, rgba(255,200,0,0.10), transparent 55%),
+            linear-gradient(135deg, #161310, #070605);
+    }
+
+    /* ========== Gallery (hidden replicas that fly to cart) ========== */
+    .products__gallery {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        visibility: hidden;
+    }
+    .products__gallery-item {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        border-radius: 6px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        will-change: transform, opacity;
+    }
+
+    /* ========== Caption row under each tile ========== */
+    .jsne-caption {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.9rem 0.25rem 1.6rem 0.25rem;
+        font-family: 'Inter Display', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+    }
+    .jsne-name { color: #ffffff; }
+    .jsne-plus {
+        color: #ffffff;
+        font-size: 1rem;
+        line-height: 1;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0.25rem 0.35rem;
+        transition: transform 0.3s ease-out;
+    }
+    .jsne-card:hover .jsne-plus { transform: rotate(90deg); }
+
+    @@media (max-width: 1024px) { .jsne-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @@media (max-width: 640px)  { .jsne-grid { grid-template-columns: 1fr; } }
+
+    /* ========== Cart button ========== */
+    .cart-button {
+        position: fixed;
+        top: 3.5%;
+        right: 8.5%;
+        z-index: 120;
+        height: 2.5rem; /* match .landing-menu so both icons share a vertical center */
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        cursor: pointer;
+        color: #fff;
+        font-family: 'Inter Display', system-ui, sans-serif;
+        font-size: 0.66rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        user-select: none;
+    }
+    .cart-button__label-wrap {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .cart-button__icon {
+        display: block;
+        width: 1.55rem;
+        height: 1.55rem;
+        object-fit: contain;
+        filter: brightness(0) invert(1);
+        transition: transform 0.35s ease;
+    }
+    .cart-button:hover .cart-button__icon { transform: scale(1.12) rotate(-4deg); }
+    .cart-button__number-wrap {
+        position: relative;
+        width: 1.5rem;
+        height: 1.5rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .cart-button__number-bg {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: #ffffff;
+    }
+    .cart-button__number {
+        position: relative;
+        z-index: 2;
+        color: #000;
+        font-family: 'Inter Display', system-ui, sans-serif;
+        font-weight: 600;
+        font-size: 0.68rem;
+        letter-spacing: 0;
+    }
+
+    /* ================= Osmo-style cart wipe panel ================= */
+    .cart-nav {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: 145; /* below repeat-image-panel (160), above nav (140) */
+        display: none;
+        overflow: hidden; /* prevents xPercent: 101 from creating a scrollbar */
+    }
+    .cart-nav[data-cart="open"] { display: block; }
+    .cart-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background: rgba(0,0,0,0.55);
+        cursor: pointer;
+    }
+    .cart-menu {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: min(30em, 92vw);
+        overflow: hidden; /* contains the bg-panels wipe */
+    }
+    .cart-menu-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+    }
+    .bg-panel {
+        position: absolute;
+        inset: 0;
+        border-top-left-radius: 1.25em;
+        border-bottom-left-radius: 1.25em;
+        background: #0b0b0b;
+    }
+    .bg-panel.first  { background: #1a0a0a; } /* red-ish accent */
+    .bg-panel.second { background: #141414; } /* mid-tone */
+    .bg-panel.third  { background: #0b0b0b; } /* final surface */
+
+    .cart-menu-inner {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        padding: 2.6rem 1.6rem 1.6rem 1.6rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        color: #fff;
+        font-family: 'Inter Display', system-ui, sans-serif;
+    }
+    .cart-menu-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .cart-menu-eyebrow {
+        font-size: 0.66rem;
+        letter-spacing: 0.3em;
+        color: rgba(255,255,255,0.55);
+        text-transform: uppercase;
+    }
+    .cart-menu-close {
+        position: relative;
+        width: 1.8rem;
+        height: 1.8rem;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+    }
+    .cart-menu-close span {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 1.1rem;
+        height: 1px;
+        background: rgba(255,255,255,0.8);
+        transform-origin: center;
+    }
+    .cart-menu-close span:first-child { transform: translate(-50%, -50%) rotate(45deg); }
+    .cart-menu-close span:last-child  { transform: translate(-50%, -50%) rotate(-45deg); }
+
+    .cart-menu-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+        overflow-y: auto;
+        overflow-x: hidden;
+        flex: 1 1 auto;
+        min-height: 0;
+        padding-right: 0.2rem;
+    }
+    .cart-menu-empty {
+        margin-top: auto;
+        margin-bottom: auto;
+        text-align: left;
+        padding: 1rem 0;
+    }
+    .cart-menu-empty-title {
+        font-family: 'OrithDisplay', cursive;
+        font-size: 2rem;
+        letter-spacing: 0.08em;
+        margin: 0 0 0.25rem 0;
+        text-transform: uppercase;
+    }
+    .cart-menu-empty-sub {
+        margin: 0;
+        font-size: 0.78rem;
+        color: rgba(255,255,255,0.55);
+        letter-spacing: 0.02em;
+    }
+    .cart-menu-plus {
+        display: inline-block;
+        min-width: 1.1em;
+        text-align: center;
+        color: #fff;
+    }
+
+    .cart-menu-item {
+        list-style: none;
+        display: grid;
+        grid-template-columns: 56px 1fr auto;
+        gap: 0.7rem;
+        align-items: center;
+        padding: 0.6rem;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 10px;
+        background: rgba(255,255,255,0.03);
+        min-width: 0;
+    }
+    .cart-menu-item__thumb {
+        width: 56px;
+        height: 56px;
+        border-radius: 8px;
+        background-size: cover;
+        background-position: center;
+    }
+    .cart-menu-item__body {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        min-width: 0;
+    }
+    .cart-menu-item__name {
+        font-size: 0.72rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .cart-menu-item__meta {
+        font-size: 0.66rem;
+        letter-spacing: 0.04em;
+        color: rgba(255,255,255,0.5);
+    }
+    .cart-menu-item__qty {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.75rem;
+        color: rgba(255,255,255,0.85);
+    }
+    .cart-menu-item__qty button {
+        width: 1.3rem;
+        height: 1.3rem;
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,0.2);
+        background: transparent;
+        color: #fff;
+        cursor: pointer;
+        line-height: 1;
+        font-size: 0.85rem;
+    }
+    .cart-menu-item__qty button:hover { background: rgba(255,255,255,0.08); }
+    .cart-menu-item__remove {
+        margin-left: 0.35rem;
+        width: 1.3rem;
+        height: 1.3rem;
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: transparent;
+        color: rgba(255,255,255,0.55);
+        cursor: pointer;
+        font-size: 0.9rem;
+        line-height: 1;
+    }
+    .cart-menu-item__remove:hover { color: #fff; border-color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.06); }
+
+    .cart-menu-foot {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        padding-top: 0.8rem;
+        border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .cart-menu-total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        font-size: 0.72rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.7);
+    }
+    .cart-menu-total {
+        font-family: 'Bebas Neue', system-ui, sans-serif;
+        font-size: 1.6rem;
+        color: #fff;
+        letter-spacing: 0.05em;
+    }
+    .cart-menu-checkout {
+        margin-top: 0.2rem;
+        padding: 0.85rem 1rem;
+        background: #fff;
+        color: #000;
+        border: none;
+        border-radius: 999px;
+        font-family: 'Inter Display', system-ui, sans-serif;
+        font-size: 0.68rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+    .cart-menu-checkout:hover { background: rgba(255,255,255,0.88); }
+
+    /* ================= Repeating Image Transition (adapted) ================= */
+    .rit-panel {
+        position: fixed;
+        inset: 0;
+        padding: 2rem 1.4rem;
+        display: grid;
+        gap: 1.25rem;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 160; /* above nav overlay (150) */
+        background: #000; /* fully opaque */
+        grid-template-columns: 100%;
+        grid-template-rows: auto 1fr;
+        grid-template-areas:
+            "panel-image"
+            "panel-content";
+        overflow-y: auto;
+    }
+    @@media (min-width: 720px) {
+        .rit-panel {
+            padding: 2rem;
+            grid-template-columns: minmax(0, 0.55fr) minmax(0, 0.45fr);
+            grid-template-rows: 100%;
+            grid-template-areas: "panel-image panel-content";
+            align-items: stretch;
+            gap: 2.5rem;
+            overflow: hidden;
+        }
+        .rit-panel.rit-panel--right {
+            grid-template-columns: minmax(0, 0.45fr) minmax(0, 0.55fr);
+            grid-template-areas: "panel-content panel-image";
+        }
+    }
+    .rit-panel__img {
+        grid-area: panel-image;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        border-radius: 18px;
+        background-size: cover;
+        background-position: center;
+        box-shadow: 0 28px 90px rgba(0,0,0,0.75);
+        will-change: clip-path, transform;
+    }
+    @@media (min-width: 720px) {
+        .rit-panel__img {
+            height: 100%;
+            aspect-ratio: auto;
+            max-height: calc(100vh - 4rem);
+        }
+    }
+    .rit-panel__content {
+        grid-area: panel-content;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 1rem;
+        text-align: left;
+        font-family: 'Inter Display', system-ui, sans-serif;
+        color: rgba(255,255,255,0.92);
+        max-width: 40rem;
+        padding-right: 0.5rem;
+        min-height: 0;
+    }
+    @@media (min-width: 720px) {
+        .rit-panel__content {
+            justify-content: space-between;
+            min-height: 100%;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+            padding-top: clamp(0.25rem, 1.5vh, 1rem);
+            padding-bottom: 0.35rem;
+            gap: 1.15rem;
+        }
+    }
+    .rit-panel__intro {
+        flex: 0 0 auto;
+    }
+    .rit-panel__bottom {
+        flex: 0 0 auto;
+        margin-top: 0.25rem;
+    }
+    .rit-panel__eyebrow {
+        font-size: 0.62rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.5);
+    }
+    .rit-panel__title {
+        margin: 0.15rem 0 0 0;
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        line-height: 1;
+        font-family: 'OrithDisplay', cursive;
+        color: #fff;
+    }
+    .rit-panel__desc {
+        margin: 0.35rem 0 0 0;
+        font-size: 0.82rem;
+        letter-spacing: 0.02em;
+        color: rgba(255,255,255,0.62);
+        line-height: 1.5;
+        max-width: 32rem;
+    }
+    .rit-panel__specs {
+        flex: 1 1 auto;
+        min-height: 0;
+        margin: 0;
+        padding: 1rem 1.05rem;
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 14px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.02) 100%);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0;
+        column-gap: 1.2rem;
+        row-gap: 0;
+    }
+    @@media (min-width: 520px) {
+        .rit-panel__specs { grid-template-columns: 1fr 1fr; }
+    }
+    .rit-spec {
+        display: grid;
+        grid-template-columns: 5.5rem 1fr;
+        align-items: baseline;
+        gap: 0.6rem;
+        padding: 0.55rem 0.15rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .rit-spec:last-child { border-bottom: none; }
+    .rit-spec dt {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-size: 0.6rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.5);
+    }
+    .rit-spec dt::before {
+        content: "";
+        flex-shrink: 0;
+        width: 3px;
+        height: 0.95em;
+        border-radius: 2px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0.12));
+        opacity: 0.85;
+    }
+    .rit-spec[data-spec-key="gpu"] dt::before { background: linear-gradient(180deg, #8ec5ff, rgba(142,197,255,0.2)); }
+    .rit-spec[data-spec-key="cpu"] dt::before { background: linear-gradient(180deg, #c4f0a8, rgba(196,240,168,0.2)); }
+    .rit-spec[data-spec-key="ram"] dt::before { background: linear-gradient(180deg, #e8c4ff, rgba(232,196,255,0.2)); }
+    .rit-spec dd {
+        margin: 0;
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.94);
+        letter-spacing: 0.02em;
+        line-height: 1.35;
+    }
+    .rit-panel__footer {
+        margin-top: 0;
+        padding-top: 1.15rem;
+        border-top: 1px solid rgba(255,255,255,0.12);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem 1.25rem;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .rit-panel__price {
+        font-family: 'Bebas Neue', system-ui, sans-serif;
+        font-size: clamp(2.85rem, 6vw, 4.1rem);
+        letter-spacing: 0.04em;
+        color: #fff;
+        line-height: 0.95;
+        text-shadow: 0 0 48px rgba(255,255,255,0.12);
+    }
+    .rit-panel__actions {
+        display: inline-flex;
+        gap: 0.55rem;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .rit-panel__add,
+    .rit-panel__close {
+        background: transparent;
+        border: 1px solid rgba(255,255,255,0.22);
+        color: rgba(255,255,255,0.92);
+        border-radius: 999px;
+        padding: 0.72rem 1.15rem;
+        font-family: 'Inter Display', system-ui, sans-serif;
+        font-size: 0.66rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+    .rit-panel__add {
+        background: #fff;
+        color: #000;
+        border-color: #fff;
+        padding: 0.95rem 1.75rem;
+        font-size: 0.74rem;
+        letter-spacing: 0.24em;
+        font-weight: 500;
+        box-shadow: 0 16px 44px rgba(255,255,255,0.14), 0 4px 14px rgba(0,0,0,0.35);
+    }
+    .rit-panel__add:hover {
+        background: rgba(255,255,255,0.92);
+        transform: translateY(-2px);
+        box-shadow: 0 22px 56px rgba(255,255,255,0.18), 0 6px 18px rgba(0,0,0,0.4);
+    }
+    .rit-panel__close:hover {
+        border-color: rgba(255,255,255,0.55);
+        background: rgba(255,255,255,0.06);
+    }
+    .rit-panel__trust {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        display: grid;
+        gap: 0.7rem;
+        font-size: 0.72rem;
+        letter-spacing: 0.035em;
+        line-height: 1.5;
+        color: rgba(255,255,255,0.58);
+    }
+    .rit-panel__trust strong {
+        color: rgba(255,255,255,0.82);
+        font-weight: 500;
+    }
+    .rit-panel__trust-row {
+        display: flex;
+        gap: 0.55rem;
+        align-items: flex-start;
+    }
+    .rit-panel__trust-mark {
+        flex-shrink: 0;
+        width: 1.15rem;
+        height: 1.15rem;
+        margin-top: 0.12rem;
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,0.2);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.55rem;
+        color: rgba(255,255,255,0.75);
+        background: rgba(255,255,255,0.05);
+    }
+    .rit-mover {
+        position: fixed;
+        background-size: cover;
+        background-position: 50% 50%;
+        will-change: transform, clip-path, opacity;
+        pointer-events: none;
+        border-radius: 14px;
+        box-shadow: 0 24px 70px rgba(0,0,0,0.55);
+    }
+
+</style>
+}
+
+@section scripts {
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<script>
+/* ---------------- Load builds from DB and render grid ---------------- */
+(function loadBuildsFromDb() {
+    var grid = document.getElementById('buildsGrid');
+    if (!grid) return;
+
+    function esc(s) {
+        return String(s == null ? '' : s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function tileHtml(b, idx) {
+        var id = 'db-' + (b.Id || idx);
+        var buildId = Number(b.Id || 0);
+        var name = b.Name || 'SYSTEM';
+        var desc = b.Description || '';
+        var price = Number(b.Price || 0);
+        var cpu = b.Cpu || '';
+        var gpu = b.Gpu || '';
+        var ram = b.Ram || '';
+        var storage = b.Storage || '';
+        var cooling = b.Cooling || '';
+        var psu = b.Psu || '';
+        var caseName = b.CaseName || '';
+        var img = b.ImageUrl || '';
+        var bg = img ? (' style="background-image:url(' + esc(img) + ')"') : '';
+        var dataImg = img ? (' data-image="' + esc(img) + '"') : '';
+
+        return (
+            '<div class="products__item jsne-card"' +
+            ' data-id="' + esc(id) + '"' +
+            ' data-buildid="' + esc(buildId) + '"' +
+            ' data-price="' + esc(price) + '"' +
+            ' data-name="' + esc(name) + '"' +
+            ' data-tagline="' + esc(desc) + '"' +
+            ' data-cpu="' + esc(cpu) + '"' +
+            ' data-gpu="' + esc(gpu) + '"' +
+            ' data-ram="' + esc(ram) + '"' +
+            ' data-storage="' + esc(storage) + '"' +
+            ' data-cooling="' + esc(cooling || '—') + '"' +
+            ' data-psu="' + esc(psu || '—') + '"' +
+            ' data-case="' + esc(caseName || '—') + '"' +
+            dataImg +
+            '>' +
+            '  <div class="products__images">' +
+            '    <div class="products__main-image jsne-thumb"' + bg + '></div>' +
+            '    <div class="products__gallery">' +
+            '      <div class="products__gallery-item"' + bg + '></div>' +
+            '      <div class="products__gallery-item"' + bg + '></div>' +
+            '      <div class="products__gallery-item"' + bg + '></div>' +
+            '      <div class="products__gallery-item"' + bg + '></div>' +
+            '      <div class="products__gallery-item"' + bg + '></div>' +
+            '      <div class="products__gallery-item"' + bg + '></div>' +
+            '    </div>' +
+            '  </div>' +
+            '  <div class="jsne-caption">' +
+            '    <span class="jsne-name">' + esc(name) + '</span>' +
+            '    <button type="button" class="jsne-plus products__cta" aria-label="Add to cart">+</button>' +
+            '  </div>' +
+            '</div>'
+        );
+    }
+
+    var buildsUrl = '@Url.Action("GetBuilds", "BeastPc")';
+    fetch(buildsUrl, { method: 'GET' })
+        .then(function (r) {
+            if (!r.ok) return r.text().then(function (t) { throw new Error('HTTP ' + r.status + ': ' + (t || '').slice(0, 180)); });
+            return r.text().then(function (t) {
+                try { return JSON.parse(t); }
+                catch (e) { throw new Error('Non-JSON response: ' + (t || '').slice(0, 180)); }
+            });
+        })
+        .then(function (j) {
+            if (!j || !j.ok) throw new Error((j && j.error) ? j.error : 'Failed to load builds.');
+            var builds = (j.builds || []).filter(function (b) { return b && (b.Active === true || b.Active === 1); });
+            if (!builds.length) {
+                grid.innerHTML =
+                    '<div style="grid-column:1/-1;color:rgba(255,255,255,0.35);letter-spacing:0.14em;text-transform:uppercase;font-size:0.7rem;padding:2.4rem 0;text-align:center;">' +
+                    'No builds yet. Add builds in the Admin Dashboard.' +
+                    '</div>';
+                document.dispatchEvent(new CustomEvent('beastpc:builds-rendered'));
+                return;
+            }
+            grid.innerHTML = builds.map(tileHtml).join('');
+            document.dispatchEvent(new CustomEvent('beastpc:builds-rendered'));
+        })
+        .catch(function (err) {
+            grid.innerHTML =
+                '<div style="grid-column:1/-1;color:rgba(255,120,120,0.9);letter-spacing:0.12em;text-transform:uppercase;font-size:0.7rem;padding:2.4rem 0;text-align:center;">' +
+                'Could not load builds. ' + esc((err && err.message) ? err.message : 'Check API/DB connection.') +
+                '</div>';
+            document.dispatchEvent(new CustomEvent('beastpc:builds-rendered'));
+        });
+})();
+
+/* ---------------- Cart (Codrops add-to-cart logic, vanilla-adapted) ---------------- */
+(function () {
+    var CART_STORAGE_KEY = 'beastpc_cart';
+    var cartItems = [];
+    try {
+        var saved = sessionStorage.getItem(CART_STORAGE_KEY);
+        if (saved) cartItems = JSON.parse(saved) || [];
+    } catch (e) { cartItems = []; }
+
+    var cartButton = document.querySelector('.cart-button');
+    var cartButtonNumber = document.querySelector('.cart-button__number');
+    var cartButtonBg = document.querySelector('.cart-button__number-bg');
+
+    function persistCart() {
+        try { sessionStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems)); }
+        catch (e) { /* ignore quota */ }
+    }
+
+    function updateCart() {
+        var totalQty = 0;
+        cartItems.forEach(function (it) { totalQty += Number(it.quantity) || 0; });
+        cartButtonNumber.innerHTML = totalQty;
+        persistCart();
+    }
+
+    function addItemToCart(el) {
+        var id = el.dataset.id;
+        var buildId = Number(el.dataset.buildid || 0);
+        var price = el.dataset.price;
+        var name = el.dataset.name;
+        var thumbUrl = el.dataset.image || '';
+
+        var index = -1;
+        for (var i = 0; i < cartItems.length; i++) { if (cartItems[i].id === id) { index = i; break; } }
+
+        if (index < 0) {
+            var newItem = { id: id, buildId: buildId, price: price, name: name, thumbUrl: thumbUrl, quantity: 1 };
+            cartItems.push(newItem);
+        } else {
+            cartItems[index].quantity += 1;
+            if (buildId && !cartItems[index].buildId) cartItems[index].buildId = buildId;
+            if (thumbUrl && !cartItems[index].thumbUrl) cartItems[index].thumbUrl = thumbUrl;
+        }
+        updateCart();
+    }
+
+    function cartButtonAnimationSetup() {
+        if (!window.gsap) return;
+        gsap.set([cartButtonNumber, cartButtonBg], { scale: 0 });
+    }
+    function cartButtonAnimationEnter() {
+        if (!window.gsap) return;
+        var tl = gsap.timeline();
+        tl.to([cartButtonNumber, cartButtonBg], {
+            scale: 1, stagger: 0.1, duration: 0.8, ease: 'elastic.out(1.3, 0.9)'
+        }, 0);
+    }
+
+    cartButtonAnimationSetup();
+    // Restore badge + animate it in if the cart is already populated from a previous page.
+    if (cartItems.length > 0) {
+        updateCart();
+        if (window.gsap) cartButtonAnimationEnter();
+    }
+
+    // Allow the preview panel's "Add to cart" button to push items into the cart.
+    window.addEventListener('rit:add-to-cart', function (e) {
+        var item = e.detail && e.detail.item;
+        if (!item) return;
+        if (cartItems.length === 0 && window.gsap) cartButtonAnimationEnter();
+        addItemToCart(item);
+        renderCartMenu();
+    });
+
+    /* ----------- Osmo-style cart wipe panel ----------- */
+    var cartNav = document.querySelector('.cart-nav');
+    var cartMenu = cartNav ? cartNav.querySelector('.cart-menu') : null;
+    var cartOverlay = cartNav ? cartNav.querySelector('.cart-overlay') : null;
+    var cartBgPanels = cartNav ? cartNav.querySelectorAll('.bg-panel') : [];
+    var cartMenuList = cartNav ? cartNav.querySelector('.cart-menu-list') : null;
+    var cartMenuTotal = cartNav ? cartNav.querySelector('.cart-menu-total') : null;
+    var cartToggles = document.querySelectorAll('[data-cart-toggle]');
+    var cartNavFades = cartNav ? cartNav.querySelectorAll('[data-cart-fade]') : [];
+
+    var cartIsAnimating = false;
+
+    function formatPeso(val) { return '\u20B1' + Number(val || 0).toLocaleString(); }
+
+    function renderCartMenu() {
+        if (!cartMenuList) return;
+        // Wipe existing rendered items (keep the "empty" li).
+        var oldItems = cartMenuList.querySelectorAll('.cart-menu-item');
+        oldItems.forEach(function (n) { n.remove(); });
+
+        var emptyEl = cartMenuList.querySelector('[data-cart-empty]');
+        if (cartItems.length === 0) {
+            if (emptyEl) emptyEl.style.display = '';
+        } else {
+            if (emptyEl) emptyEl.style.display = 'none';
+
+            cartItems.forEach(function (item) {
+                var li = document.createElement('li');
+                li.className = 'cart-menu-item';
+                var thumb = document.createElement('div');
+                thumb.className = 'cart-menu-item__thumb';
+                if (item.thumbUrl) {
+                    thumb.style.backgroundImage = 'url(' + item.thumbUrl + ')';
+                    thumb.style.backgroundSize = 'cover';
+                    thumb.style.backgroundPosition = 'center';
+                }
+                var body = document.createElement('div');
+                body.className = 'cart-menu-item__body';
+                body.innerHTML =
+                    '<span class="cart-menu-item__name">' + item.name + '</span>' +
+                    '<span class="cart-menu-item__meta">' + formatPeso(item.price) + ' each</span>';
+                var qty = document.createElement('div');
+                qty.className = 'cart-menu-item__qty';
+                qty.innerHTML =
+                    '<button type="button" data-minus="' + item.id + '" aria-label="Decrease">-</button>' +
+                    '<span>' + item.quantity + '</span>' +
+                    '<button type="button" data-plus="' + item.id + '" aria-label="Increase">+</button>' +
+                    '<button type="button" class="cart-menu-item__remove" data-remove="' + item.id + '" aria-label="Remove">&times;</button>';
+                li.appendChild(thumb);
+                li.appendChild(body);
+                li.appendChild(qty);
+                cartMenuList.appendChild(li);
+            });
+        }
+
+        var total = 0;
+        cartItems.forEach(function (it) { total += Number(it.price) * it.quantity; });
+        if (cartMenuTotal) cartMenuTotal.textContent = formatPeso(total);
+    }
+
+    function updateQty(id, delta) {
+        for (var i = 0; i < cartItems.length; i++) {
+            if (cartItems[i].id === id) {
+                var nq = cartItems[i].quantity + delta;
+                if (nq > 0) cartItems[i].quantity = nq;
+                else { cartItems.splice(i, 1); }
+                break;
+            }
+        }
+        updateCart();
+        renderCartMenu();
+    }
+
+    function removeItem(id) {
+        for (var i = 0; i < cartItems.length; i++) {
+            if (cartItems[i].id === id) { cartItems.splice(i, 1); break; }
+        }
+        updateCart();
+        renderCartMenu();
+    }
+
+    if (cartMenuList) {
+        cartMenuList.addEventListener('click', function (e) {
+            var t = e.target;
+            if (!t) return;
+            if (t.dataset.plus)   return updateQty(t.dataset.plus, 1);
+            if (t.dataset.minus)  return updateQty(t.dataset.minus, -1);
+            if (t.dataset.remove) return removeItem(t.dataset.remove);
+        });
+    }
+
+    /* Checkout button -> /Home/Checkout (cart flows via sessionStorage) */
+    var checkoutBtn = document.querySelector('.cart-menu-checkout');
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', function () {
+            if (cartItems.length === 0) return;
+            persistCart();
+            window.location.href = '@Url.Action("Checkout", "Home")';
+        });
+    }
+
+    function openCartPanel() {
+        if (!window.gsap || !cartNav || cartIsAnimating) return;
+        if (cartNav.getAttribute('data-cart') === 'open') return;
+        cartIsAnimating = true;
+        cartNav.setAttribute('data-cart', 'open');
+
+        renderCartMenu();
+
+        var tl = gsap.timeline({
+            defaults: { ease: 'power3.out', duration: 0.7 },
+            onComplete: function () { cartIsAnimating = false; }
+        });
+
+        tl.set(cartNav, { display: 'block' })
+          .set(cartMenu, { xPercent: 0 }, '<')
+          .fromTo(cartOverlay, { autoAlpha: 0 }, { autoAlpha: 1 }, '<')
+          .fromTo(cartBgPanels, { xPercent: 101 }, { xPercent: 0, stagger: 0.12, duration: 0.575 }, '<')
+          .fromTo(cartNavFades, { autoAlpha: 0, yPercent: 40 }, { autoAlpha: 1, yPercent: 0, stagger: 0.04 }, '<+=0.35');
+    }
+
+    function closeCartPanel() {
+        if (!window.gsap || !cartNav || cartIsAnimating) return;
+        if (cartNav.getAttribute('data-cart') !== 'open') return;
+        cartIsAnimating = true;
+        cartNav.setAttribute('data-cart', 'closed');
+
+        var tl = gsap.timeline({
+            defaults: { ease: 'power3.inOut', duration: 0.55 },
+            onComplete: function () {
+                gsap.set(cartNav, { display: 'none' });
+                cartIsAnimating = false;
+            }
+        });
+        tl.to(cartOverlay, { autoAlpha: 0 })
+          .to(cartMenu, { xPercent: 110 }, '<');
+    }
+
+    cartToggles.forEach(function (t) {
+        t.addEventListener('click', function () {
+            if (cartNav && cartNav.getAttribute('data-cart') === 'open') closeCartPanel();
+            else openCartPanel();
+        });
+    });
+
+    if (cartButton) {
+        cartButton.addEventListener('click', function () { openCartPanel(); });
+    }
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && cartNav && cartNav.getAttribute('data-cart') === 'open') {
+            closeCartPanel();
+        }
+    });
+
+    /* ---------------- Products (fly-to-cart animation) ---------------- */
+    var products = [];
+    var ctas = [];
+    var cartBtnCoords = { x: 0, y: 0 };
+
+    function setCartButtonCoords() {
+        var r = cartButton.getBoundingClientRect();
+        cartBtnCoords = { x: r.x, y: r.y };
+    }
+    setCartButtonCoords();
+    window.addEventListener('resize', setCartButtonCoords);
+    window.addEventListener('scroll', setCartButtonCoords, { passive: true });
+
+    function refreshProducts() {
+        products = Array.prototype.slice.call(document.querySelectorAll('.products__item'));
+        ctas = Array.prototype.slice.call(document.querySelectorAll('.products__cta'));
+    }
+
+    function bindCtas() {
+        refreshProducts();
+        ctas.forEach(function (cta) {
+            if (cta.dataset && cta.dataset.cartBound === '1') return;
+            if (cta.dataset) cta.dataset.cartBound = '1';
+            cta.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation(); // clicking + should NOT open the preview transition
+            var currentProduct = cta.closest('.products__item');
+            if (!currentProduct) return;
+            refreshProducts();
+            var i = products.indexOf(currentProduct);
+            if (!window.gsap) { addItemToCart(currentProduct); return; }
+
+            var otherProducts = products.filter(function (p, j) { return j !== i; });
+            var gallery = currentProduct.querySelector('.products__gallery');
+            var currentGallery = Array.prototype.slice.call(currentProduct.querySelectorAll('.products__gallery-item'));
+            var isTopRow = window.innerWidth > 768 && i < 3;
+
+            gsap.set(gallery, { autoAlpha: 1 });
+            gsap.set(currentGallery, { transformOrigin: isTopRow ? 'top right' : 'bottom left' });
+
+            var rect = currentGallery[0].getBoundingClientRect();
+            var y = rect.y, left = rect.left, right = rect.right, height = rect.height;
+
+            var tl = gsap.timeline({
+                onComplete: function () {
+                    gsap.set(currentGallery, { scale: 1, autoAlpha: 1, y: 0, x: 0 });
+                    gsap.set(gallery, { autoAlpha: 0 });
+                }
+            });
+            tl.addLabel('start');
+
+            tl.to(otherProducts, { scale: 0.8, autoAlpha: 0.05, duration: 0.6, stagger: 0.04, ease: 'power2.out' }, 'start');
+            tl.to(currentProduct, { scale: 1.05, duration: 1, ease: 'power2.out' }, 'start+=0.7');
+
+            tl.to(currentGallery, {
+                keyframes: {
+                    '40%': {
+                        y: isTopRow ? height * 1.5 : -height * 1.5,
+                        scale: isTopRow ? 0.8 : 0.5,
+                        autoAlpha: 1
+                    },
+                    '100%': {
+                        x: isTopRow ? cartBtnCoords.x - right : cartBtnCoords.x - left - 12,
+                        y: isTopRow ? cartBtnCoords.y - y : cartBtnCoords.y - y - height + 25,
+                        scale: 0,
+                        autoAlpha: 0
+                    }
+                },
+                stagger: { from: 'end', each: 0.04 },
+                duration: 1.8,
+                ease: 'power2.inOut'
+            }, 'start');
+
+            tl.add(function () {
+                if (cartItems.length === 0) cartButtonAnimationEnter();
+                addItemToCart(currentProduct);
+            }, 'start+=0.6');
+
+            tl.to([currentProduct].concat(otherProducts), {
+                scale: 1, autoAlpha: 1, duration: 0.8, stagger: 0.03, ease: 'power2.out'
+            }, 'start+=1.6');
+            });
+        });
+    }
+
+    bindCtas();
+    document.addEventListener('beastpc:builds-rendered', function () { bindCtas(); renderCartMenu(); }, false);
+})();
+
+/* ---------------- Repeating Image Transition (click tile to preview) ---------------- */
+(function setupRepeatingImageTransition() {
+    if (!window.gsap) return;
+
+    var panel = document.querySelector('.rit-panel');
+    if (!panel) return;
+
+    var panelImg = panel.querySelector('.rit-panel__img');
+    var panelContent = panel.querySelector('.rit-panel__content');
+    var panelTitle = panel.querySelector('.rit-panel__title');
+    var panelDesc = panel.querySelector('.rit-panel__desc');
+    var panelPrice = panel.querySelector('.rit-panel__price');
+    var panelAdd = panel.querySelector('.rit-panel__add');
+    var closeBtn = panel.querySelector('.rit-panel__close');
+    var specFields = {
+        cpu: panel.querySelector('[data-spec="cpu"]'),
+        gpu: panel.querySelector('[data-spec="gpu"]'),
+        ram: panel.querySelector('[data-spec="ram"]'),
+        storage: panel.querySelector('[data-spec="storage"]'),
+        cooling: panel.querySelector('[data-spec="cooling"]'),
+        psu: panel.querySelector('[data-spec="psu"]'),
+        'case': panel.querySelector('[data-spec="case"]')
+    };
+
+    var gridItems = [];
+    var jsnePage = document.querySelector('.jsne-page');
+
+    var isAnimating = false;
+    var isOpen = false;
+    var currentItem = null;
+
+    function formatPeso(val) { return '\u20B1' + Number(val || 0).toLocaleString(); }
+
+    var config = {
+        clipPathDirection: 'top-bottom',
+        steps: 7,
+        stepDuration: 0.32,
+        stepInterval: 0.05,
+        moverPauseBeforeExit: 0.14,
+        panelRevealEase: 'sine.inOut',
+        moverEnterEase: 'sine.in',
+        moverExitEase: 'sine',
+        panelRevealDurationFactor: 2.1
+    };
+
+    function getClipPaths(direction) {
+        switch (direction) {
+            case 'bottom-top':
+                return { from: 'inset(0% 0% 100% 0%)', reveal: 'inset(0% 0% 0% 0%)', hide: 'inset(100% 0% 0% 0%)' };
+            case 'left-right':
+                return { from: 'inset(0% 100% 0% 0%)', reveal: 'inset(0% 0% 0% 0%)', hide: 'inset(0% 0% 0% 100%)' };
+            case 'right-left':
+                return { from: 'inset(0% 0% 0% 100%)', reveal: 'inset(0% 0% 0% 0%)', hide: 'inset(0% 100% 0% 0%)' };
+            case 'top-bottom':
+            default:
+                return { from: 'inset(100% 0% 0% 0%)', reveal: 'inset(0% 0% 0% 0%)', hide: 'inset(0% 0% 100% 0%)' };
+        }
+    }
+
+    function getElementCenter(el) {
+        var r = el.getBoundingClientRect();
+        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    }
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+
+    function generateMotionPath(startRect, endRect, steps) {
+        var path = [];
+        var fullSteps = steps + 2;
+        var startCenter = { x: startRect.left + startRect.width / 2, y: startRect.top + startRect.height / 2 };
+        var endCenter = { x: endRect.left + endRect.width / 2, y: endRect.top + endRect.height / 2 };
+        for (var i = 0; i < fullSteps; i++) {
+            var t = i / (fullSteps - 1);
+            var width = lerp(startRect.width, endRect.width, t);
+            var height = lerp(startRect.height, endRect.height, t);
+            var cx = lerp(startCenter.x, endCenter.x, t);
+            var cy = lerp(startCenter.y, endCenter.y, t);
+            path.push({ left: cx - width / 2, top: cy - height / 2, width: width, height: height });
+        }
+        return path.slice(1, -1);
+    }
+
+    function cleanupMovers(movers) {
+        var delay = config.steps * config.stepInterval + (config.stepDuration * 2) + config.moverPauseBeforeExit + 0.15;
+        gsap.delayedCall(delay, function () {
+            movers.forEach(function (m) { if (m && m.remove) m.remove(); });
+        });
+    }
+
+    function positionPanel(clickedItem) {
+        var centerX = getElementCenter(clickedItem).x;
+        var isLeftSide = centerX < (window.innerWidth / 2);
+        if (isLeftSide) panel.classList.add('rit-panel--right');
+        else panel.classList.remove('rit-panel--right');
+    }
+
+    function openFromItem(item) {
+        if (isAnimating) return;
+        isAnimating = true;
+        currentItem = item;
+
+        positionPanel(item);
+
+        var imgEl = item.querySelector('.products__main-image');
+        if (!imgEl) { isAnimating = false; return; }
+
+        var bg = window.getComputedStyle(imgEl).backgroundImage;
+        panelImg.style.backgroundImage = bg;
+        panelTitle.textContent = item.dataset.name || 'SYSTEM';
+        panelDesc.textContent = item.dataset.tagline || 'Specs and details coming soon.';
+        panelPrice.textContent = formatPeso(item.dataset.price);
+
+        Object.keys(specFields).forEach(function (key) {
+            if (specFields[key]) {
+                specFields[key].textContent = item.dataset[key] || '—';
+            }
+        });
+
+        var clipPaths = getClipPaths(config.clipPathDirection);
+
+        // Fade out the grid so the panel reads cleanly.
+        gsap.to(gridItems, {
+            opacity: 0,
+            scale: function (i, el) { return el === item ? 1 : 0.9; },
+            duration: 0.45,
+            ease: 'sine.out',
+            stagger: 0.02
+        });
+
+        gsap.set(panelContent, { opacity: 0, y: 18 });
+        gsap.set(panel, { opacity: 1, pointerEvents: 'auto' });
+        gsap.set(panelImg, { clipPath: clipPaths.hide });
+
+        var startRect = imgEl.getBoundingClientRect();
+        var endRect = panelImg.getBoundingClientRect();
+        var path = generateMotionPath(startRect, endRect, config.steps);
+        var movers = [];
+
+        path.forEach(function (step, idx) {
+            var mover = document.createElement('div');
+            mover.className = 'rit-mover';
+            mover.style.backgroundImage = bg;
+            mover.style.left = step.left + 'px';
+            mover.style.top = step.top + 'px';
+            mover.style.width = step.width + 'px';
+            mover.style.height = step.height + 'px';
+            mover.style.zIndex = String(2000 + idx);
+            mover.style.clipPath = clipPaths.from;
+            document.body.appendChild(mover);
+            movers.push(mover);
+
+            var delay = idx * config.stepInterval;
+            gsap.timeline({ delay: delay })
+                .fromTo(mover, { opacity: 0.45, clipPath: clipPaths.hide }, {
+                    opacity: 1,
+                    clipPath: clipPaths.reveal,
+                    duration: config.stepDuration,
+                    ease: config.moverEnterEase
+                })
+                .to(mover, {
+                    clipPath: clipPaths.from,
+                    duration: config.stepDuration,
+                    ease: config.moverExitEase
+                }, '+=' + config.moverPauseBeforeExit);
+        });
+
+        cleanupMovers(movers);
+
+        gsap.timeline({
+            defaults: { duration: config.stepDuration * config.panelRevealDurationFactor, ease: config.panelRevealEase }
+        })
+            .to(panelImg, { clipPath: clipPaths.reveal, delay: config.steps * config.stepInterval }, 0)
+            .to(panelContent, {
+                opacity: 1,
+                y: 0,
+                duration: 0.9,
+                ease: 'expo.out',
+                delay: config.steps * config.stepInterval + 0.05,
+                onComplete: function () {
+                    isAnimating = false;
+                    isOpen = true;
+                }
+            }, 0);
+    }
+
+    function closePanel() {
+        if (isAnimating || !isOpen) return;
+        isAnimating = true;
+
+        gsap.timeline({
+            onComplete: function () {
+                gsap.set(panel, { opacity: 0, pointerEvents: 'none' });
+                isAnimating = false;
+                isOpen = false;
+                currentItem = null;
+            }
+        })
+            .to(panelContent, { opacity: 0, y: 10, duration: 0.25, ease: 'sine.inOut' }, 0)
+            .to(panel, { opacity: 0, duration: 0.35, ease: 'sine.inOut' }, 0.05)
+            .to(gridItems, {
+                opacity: 1,
+                scale: 1,
+                duration: 0.45,
+                ease: 'sine.out',
+                stagger: 0.02
+            }, 0.1);
+    }
+
+    // Panel "Add to cart" button — relays to the cart logic via a custom event.
+    if (panelAdd) {
+        panelAdd.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (!currentItem) return;
+            window.dispatchEvent(new CustomEvent('rit:add-to-cart', { detail: { item: currentItem } }));
+        });
+    }
+
+    function refreshGridItems() {
+        gridItems = Array.prototype.slice.call(document.querySelectorAll('.products__item'));
+    }
+    function bindTileClicks() {
+        refreshGridItems();
+        gridItems.forEach(function (tile) {
+            if (tile.dataset && tile.dataset.ritBound === '1') return;
+            if (tile.dataset) tile.dataset.ritBound = '1';
+            tile.addEventListener('click', function () { openFromItem(tile); });
+        });
+    }
+
+    // Hook clicks on tiles (not the + button).
+    bindTileClicks();
+    document.addEventListener('beastpc:builds-rendered', function () { bindTileClicks(); }, false);
+
+    if (closeBtn) closeBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        closePanel();
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closePanel();
+    });
+})();
+
+/* ---------------- Hero nav overlay transition (same as Index) ---------------- */
+(function setupNavOverlay() {
+    var trigger = document.querySelector('.landing-menu');
+    var overlay = document.querySelector('.landing-transition-overlay');
+    var closeBtn = document.querySelector('.landing-nav-close');
+    if (!trigger || !overlay || !window.gsap) return;
+
+    var isOpen = false;
+    var busy = false;
+
+    function openPanel() {
+        if (busy || isOpen) return;
+        busy = true; isOpen = true;
+        gsap.set(overlay, { opacity: 1, clipPath: 'inset(100% 0% 0% 0%)', pointerEvents: 'auto' });
+        var tl = gsap.timeline({ onComplete: function () { busy = false; } });
+        tl.to(overlay, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.9, ease: 'power2.inOut' }, 0);
+    }
+    function closePanel() {
+        if (busy || !isOpen) return;
+        busy = true; isOpen = false;
+        var tl = gsap.timeline({
+            onComplete: function () { busy = false; gsap.set(overlay, { opacity: 0, pointerEvents: 'none' }); }
+        });
+        tl.to(overlay, { clipPath: 'inset(100% 0% 0% 0%)', duration: 0.8, ease: 'power2.inOut' }, 0);
+    }
+
+    trigger.addEventListener('click', function (e) { e.preventDefault(); isOpen ? closePanel() : openPanel(); });
+    if (closeBtn) closeBtn.addEventListener('click', function (e) { e.preventDefault(); closePanel(); });
+
+    function renumberNav() {
+        try {
+            var items = Array.prototype.slice.call(document.querySelectorAll('.landing-nav-main > li'));
+            var n = 0;
+            items.forEach(function (li) {
+                if (li && li.style && li.style.display === 'none') return;
+                var idx = li ? li.querySelector('.landing-nav-index') : null;
+                if (!idx) return;
+                n += 1;
+                idx.textContent = (n < 10 ? ('0' + n) : String(n));
+            });
+        } catch (e) { }
+    }
+
+    // Switch nav item #02 based on session:
+    // - admin: ADMIN (Dashboard)
+    // - user:  MY ACCOUNT
+    // - guest: LOGIN
+    try {
+        var _cur = JSON.parse(sessionStorage.getItem('CurrentUser') || '{}');
+        var _auth = document.getElementById('navAuthLink');
+        if (_auth) {
+            if (_cur && _cur.Role === 'admin') {
+                _auth.textContent = 'ADMIN';
+                _auth.setAttribute('href', '@Url.Action("Dashboard", "Admin")');
+            } else if (_cur && _cur.Id) {
+                _auth.textContent = 'MY ACCOUNT';
+                _auth.setAttribute('href', '@Url.Action("MyAccount", "Account")');
+            } else {
+                _auth.textContent = 'LOGIN';
+                _auth.setAttribute('href', '@Url.Action("LoginPage", "Account")');
+            }
+        }
+        if (_cur && _cur.Role === 'admin') {
+            var _al = document.getElementById('adminNavLink');
+            if (_al) _al.style.display = 'none';
+        }
+    } catch (e) { }
+
+    renumberNav();
+})();
+</script>
+}

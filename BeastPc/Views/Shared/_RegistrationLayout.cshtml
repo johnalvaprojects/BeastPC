@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - BeastPc</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --border-color: #000000;
+        }
+        body {
+            font-family: 'VT323', monospace !important;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        .custom-font-title {
+            font-family: 'VT323', monospace !important;
+            font-weight: bold;
+            font-size: 2rem;
+            letter-spacing: 0.05em;
+        }
+        .custom-font-subtitle {
+            font-family: 'VT323', monospace !important;
+            font-size: 1.1rem;
+            letter-spacing: 0.05em;
+        }
+        .custom-font-body {
+            font-family: 'VT323', monospace !important;
+            font-size: 1rem;
+            letter-spacing: 0.05em;
+        }
+        .custom-font-button {
+            font-family: 'VT323', monospace !important;
+            font-weight: bold;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        .custom-font-label {
+            font-family: 'VT323', monospace !important;
+            font-size: 1rem;
+            letter-spacing: 0.05em;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
+            font-family: 'VT323', monospace !important;
+            border: 2px solid var(--border-color) !important;
+            background-color: var(--bg-color) !important;
+            color: var(--text-color) !important;
+            padding: 0.75rem 1rem !important;
+            font-size: 1rem !important;
+            letter-spacing: 0.05em !important;
+            border-radius: 0 !important;
+        }
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23000' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.85rem center;
+            padding-right: 2.25rem !important;
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            outline: none !important;
+            border-color: var(--border-color) !important;
+            box-shadow: none !important;
+        }
+        .btn-beast {
+            font-family: 'VT323', monospace !important;
+            background-color: var(--text-color) !important;
+            color: var(--bg-color) !important;
+            border: 2px solid var(--border-color) !important;
+            padding: 0.5rem 1rem !important;
+            font-size: 1rem !important;
+            font-weight: bold !important;
+            letter-spacing: 0.1em !important;
+            text-transform: uppercase !important;
+            transition: all 0.3s ease !important;
+            cursor: pointer;
+        }
+        .btn-beast:hover {
+            background-color: var(--bg-color) !important;
+            color: var(--text-color) !important;
+        }
+        .btn-beast-secondary {
+            font-family: 'VT323', monospace !important;
+            background-color: var(--bg-color) !important;
+            color: var(--text-color) !important;
+            border: 2px solid var(--border-color) !important;
+            padding: 0.5rem 1rem !important;
+            cursor: pointer;
+        }
+        .btn-beast-secondary:hover {
+            background-color: #f3f4f6 !important;
+        }
+        .link-hover-dark:hover {
+            color: #111827 !important;
+        }
+        table.beast-table {
+            font-family: 'VT323', monospace !important;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        table.beast-table th,
+        table.beast-table td {
+            border: 2px solid var(--border-color);
+            padding: 0.75rem 1rem;
+            text-align: left;
+        }
+        table.beast-table th {
+            font-weight: bold;
+            background-color: #f9fafb;
+        }
+        table.beast-table input {
+            width: 100%;
+            max-width: 200px;
+        }
+        .beast-table-actions {
+            width: 1%;
+            white-space: nowrap;
+        }
+
+        /* Shared auth notice modal (login errors, registration errors) — monochrome */
+        .bp-auth-modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 80;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem;
+            background: rgba(0,0,0,0.45);
+        }
+        .bp-auth-modal {
+            max-width: 400px;
+            width: 100%;
+            background: #fff;
+            color: #000;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 #000;
+            padding: 1.5rem 1.35rem;
+        }
+        .bp-auth-modal-kicker {
+            font-size: 0.82rem;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: rgba(0,0,0,0.42);
+            margin-bottom: 0.5rem;
+        }
+        .bp-auth-modal-title {
+            font-size: 1.35rem;
+            font-weight: bold;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin: 0 0 0.85rem 0;
+        }
+        .bp-auth-modal-body {
+            font-size: 1rem;
+            line-height: 1.45;
+            color: rgba(0,0,0,0.78);
+            margin-bottom: 1.25rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .bp-auth-modal-ok {
+            width: 100%;
+            padding: 0.65rem 1rem;
+            border: 2px solid #000;
+            background: #000;
+            color: #fff;
+            font-family: 'VT323', monospace !important;
+            font-size: 1rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+        .bp-auth-modal-ok:hover {
+            background: #fff;
+            color: #000;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#000000',
+                        'primary-600': '#1a1a1a',
+                    }
+                }
+            }
+        };
+    </script>
+    @RenderSection("styles", required: false)
+</head>
+<body class="min-h-screen">
+    @RenderBody()
+    @RenderSection("scripts", required: false)
+</body>
+</html>

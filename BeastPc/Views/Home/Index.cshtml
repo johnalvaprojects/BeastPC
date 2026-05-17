@@ -1,0 +1,1183 @@
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_HomeFooterLayout.cshtml";
+}
+
+<svg width="0" height="0" aria-hidden="true">
+    <defs>
+        <!-- Sharper corners (1.5%) + trapezoid notches -->
+        <clipPath id="frame-clip" clipPathUnits="objectBoundingBox">
+            <path d="M 0.015,0 Q 0.2,-0.02 0.38,0 L 0.455,0 L 0.47,0.035 L 0.53,0.035 L 0.545,0 L 0.62,0 Q 0.8,-0.02 0.985,0 Q 1,0 1,0.015 Q 1.02,0.5 1,0.985 Q 1,1 0.985,1 Q 0.8,1.02 0.62,1 L 0.545,1 L 0.53,0.965 L 0.47,0.965 L 0.455,1 L 0.38,1 Q 0.2,1.02 0.015,1 Q 0,1 0,0.985 Q -0.02,0.5 0,0.015 Q 0,0 0.015,0 Z" />
+        </clipPath>
+        <path id="frame-stroke-path" d="M 15,0 Q 200,-20 380,0 L 455,0 L 470,35 L 530,35 L 545,0 L 620,0 Q 800,-20 985,0 Q 1000,0 1000,15 Q 1020,500 1000,985 Q 1000,1000 985,1000 Q 800,1020 620,1000 L 545,1000 L 530,965 L 470,965 L 455,1000 L 380,1000 Q 200,1020 15,1000 Q 0,1000 0,985 Q -20,500 0,15 Q 0,0 15,0 Z" fill="none" stroke="#000" stroke-width="2.52" vector-effect="non-scaling-stroke" />
+    </defs>
+</svg>
+
+<div class="landing-outer">
+    <div class="landing-frame">
+        <div class="landing-title-in-notch">
+            <span>BEASTPC</span>
+        </div>
+        <div class="landing-scroll-in-notch">
+            <span class="landing-scroll-line"></span>
+            <span>SCROLL DOWN</span>
+        </div>
+
+        <div class="landing-container" style="clip-path: url(#frame-clip);">
+            <video id="js-hero-video" autoplay muted playsinline class="landing-video"></video>     
+            <div class="landing-overlay"></div>
+
+            <div class="landing-hero-stage">
+                <div class="landing-hero-text">
+                <p class="landing-hero-brand js-typer hero-glitch">BEASTPC</p>
+                <span class="landing-hero-rule" aria-hidden="true"></span>
+                <p class="landing-hero-line-mango js-typer hero-glitch">ELITE GAMING MACHINES</p>
+                <p class="landing-hero-line-mango landing-hero-line-mango--later js-typer hero-glitch">PERFORMANCE WITHOUT LIMITS</p>
+                </div>
+            </div>
+        </div>
+
+        <svg class="landing-border" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
+            <use href="#frame-stroke-path" />
+        </svg>
+    </div>
+    <div class="landing-menu-wrap">
+        <span class="landing-menu-label">OPEN</span>
+        <button type="button" class="landing-menu" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+    <div class="landing-transition-overlay">
+            <div class="landing-nav-panel">
+            <div class="landing-nav-left">
+                <video class="landing-nav-media" autoplay muted loop playsinline>
+                    <source src="@Url.Content("~/Content/video/navbar/BlackTopoDesktop.mp4")" type="video/mp4" />
+                </video>
+            </div>
+            <div class="landing-nav-right">
+                <div class="landing-nav-header">
+                    <span class="landing-nav-title"></span>
+                    <div class="landing-nav-header-right">
+                        <button type="button" class="landing-nav-close" aria-label="Close navigation">
+                            <span></span>
+                            <span></span>
+                        </button>
+                        <span class="landing-nav-close-label">CLOSE</span>
+                    </div>
+                </div>
+                <ol class="landing-nav-main">
+                    <li>
+                        <span class="landing-nav-index">01</span>
+                        <a class="landing-nav-label" href="@Url.Action("Index", "Home")">HOME</a>
+                        <span class="landing-nav-plus">+</span>
+                    </li>
+                    <li>
+                        <span class="landing-nav-index">02</span>
+                        <a class="landing-nav-label" id="navAuthLink" href="@Url.Action("LoginPage", "Account")">LOGIN</a>
+                        <span class="landing-nav-plus">+</span>
+                    </li>
+                    <li>
+                        <span class="landing-nav-index">03</span>
+                        <a class="landing-nav-label" href="@Url.Action("Shop", "Home")">SHOP</a>
+                        <span class="landing-nav-plus">+</span>
+                    </li>
+                    <li>
+                        <span class="landing-nav-index">04</span>
+                        <a class="landing-nav-label" href="@Url.Action("About", "Home")">ABOUT</a>
+                        <span class="landing-nav-plus">+</span>
+                    </li>
+                    <li>
+                        <span class="landing-nav-index">05</span>
+                        <a class="landing-nav-label" href="@Url.Action("Contact", "Home")">CONTACT</a>
+                        <span class="landing-nav-plus">+</span>
+                    </li>
+                    <li id="adminNavLink" style="display:none">
+                        <span class="landing-nav-index">06</span>
+                        <a class="landing-nav-label" href="@Url.Action("Dashboard", "Admin")">ADMIN</a>
+                        <span class="landing-nav-plus">+</span>
+                    </li>
+                </ol>
+                <div class="landing-nav-meta">
+                    <div class="landing-nav-column">
+                        <span class="landing-nav-footer-title">FOLLOW</span>
+                        <span class="landing-nav-footer-item">Instagram</span>
+                        <span class="landing-nav-footer-item">YouTube</span>
+                    </div>
+                    <div class="landing-nav-column">
+                        <span class="landing-nav-footer-title">CONTACT</span>
+                        <span class="landing-nav-footer-item">info@@beastpc.local</span>
+                    </div>
+                </div>
+                <div class="landing-nav-footer">
+                    <span class="landing-nav-footer-brand">BEASTPC</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="project-outer">
+    <div class="project-inner">
+        <div class="project-text">
+            <div class="project-top">
+                <p class="project-label">FEATURED PRODUCT</p>
+                <p class="project-number">01</p>
+            </div>
+            <p class="project-plus">+</p>
+            <div class="project-bottom">
+                <h2 class="project-title">BEASTPC</h2>
+                <p class="project-body">
+                    BeastPC is an online store for high-end, ready-to-ship gaming PCs. Explore each
+                    fixed configuration, compare specs side by side, and check out a complete, tuned
+                    system&mdash;no part picking and no assembly on your end.
+                </p>
+            </div>
+            <p class="project-view-text">
+                <span class="project-view-plus">+</span>
+                <span class="project-view-label">VIEW LINEUP</span>
+            </p>
+        </div>
+
+        <div class="project-media-wrapper">
+            <div class="project-frame">
+                <div class="project-top-label">
+                    <span>COMPUTER HIGHLIGHT</span>
+                </div>
+                <div class="project-bottom-label">
+                    <span class="project-bottom-line"></span>
+                    <span>DETAIL VIEW</span>
+                </div>
+
+                <video class="landing-video" autoplay muted loop playsinline>
+                    <source src="@Url.Content("~/Content/video/videohomepage/ultimategamingpc.mp4")" type="video/mp4" />
+                </video>
+                <div class="landing-overlay"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section styles {
+<style>
+    @@font-face {
+        font-family: 'OrithDisplay';
+        src: url('@Url.Content("~/Content/fonts/orith-font/orithdisplay-regular.otf")') format("opentype");
+        font-weight: 400;
+        font-style: normal;
+    }
+    @@font-face {
+        font-family: 'Inter Display';
+        src: url('@Url.Content("~/Content/fonts/Inter-4.1/extras/otf/InterDisplay-Medium.otf")') format("opentype");
+        font-weight: 500;
+        font-style: normal;
+    }
+    @@font-face {
+        font-family: 'MangoGrotesque';
+        src: url('@Url.Content("~/Content/fonts/MangoGrotesque/OpenType-PS/MangoGrotesque-Medium.otf")') format("opentype");
+        font-weight: 500;
+        font-style: normal;
+    }
+    @@font-face {
+        font-family: 'Bebas Neue';
+        src: url('@Url.Content("~/Content/fonts/bebas_neue/BebasNeue-Regular.otf")') format("opentype");
+        font-weight: 400;
+        font-style: normal;
+    }
+    @@font-face {
+        font-family: 'BiggerDisplay';
+        src: url('@Url.Content("~/Content/fonts/BiggerDisplay.otf")') format("opentype");
+        font-weight: 400;
+        font-style: normal;
+    }
+    .landing-outer {
+        min-height: 100vh;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem;
+    }
+    .landing-frame {
+        position: relative;
+        width: min(96.8vw, calc(100% - 1rem));
+        min-height: 94.8vh;
+        margin-left: auto;
+        margin-right: auto;
+        filter: drop-shadow(0 30px 80px rgba(0,0,0,0.8));
+    }
+    .project-outer {
+        background: #000;
+        color: #fff;
+        min-height: 100vh;
+        padding: 0.5rem 0;
+    }
+    .project-inner {
+        width: 96.8vw;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: minmax(0, 0.68fr) minmax(0, 1.32fr);
+        column-gap: 1.4rem;
+        align-items: flex-start;
+        min-height: 96.8vh;
+    }
+    .project-text {
+        position: relative;
+        display: block;
+        padding-left: 0.4rem;
+        padding-top: 0.7rem;
+        padding-bottom: 0.8rem;
+        height: 96.8vh;
+        max-height: 96.8vh;
+    }
+    /* TV text animation removed by design request */
+    .project-top {
+        position: static; /* children are positioned individually */
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+    }
+    .project-plus {
+        position: absolute;
+        top: 56%;
+        left: 0.4rem;
+        margin: 0;
+        color: rgb(168, 166, 171);
+        font-family: 'Inter Display', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 1.15rem;
+        font-weight: 300;
+        line-height: 1;
+        transform: translateY(-50%);
+    }
+    .project-bottom {
+        position: static; /* children are positioned individually */
+        display: flex;
+        flex-direction: column;
+        gap: 1.1rem;
+        max-width: 27rem;
+    }
+    .project-label {
+        font-family: 'Inter Display', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 0.67rem; /* ~30% smaller than original 0.95rem */
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgb(168, 166, 171);
+        position: absolute;
+        top: 1.6rem; /* moved slightly lower */
+        left: 0.4rem;
+    }
+    .project-number {
+        font-family: 'Inter Display', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 8.18rem; /* ~10% larger than previous */
+        font-weight: 400;
+        letter-spacing: 0.09em;
+        color: rgb(168, 166, 171);
+        line-height: 0.9;
+        position: absolute;
+        top: 3.9rem; /* moved further lower (~10% more) */
+        left: 0.4rem;
+    }
+    .project-title {
+        font-family: 'OrithDisplay', cursive;
+        font-size: 2.76rem; /* ~15% larger */
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        line-height: 1.1;
+        text-transform: uppercase;
+        text-shadow: 0 0 4px rgba(0,0,0,0.45);
+        position: absolute;
+        left: 0.4rem;
+        bottom: 18rem;
+    }
+    @@keyframes beastRgb {
+        0% {
+            color: #ff3b3b; /* red */
+            text-shadow: 0 0 8px rgba(255,59,59,0.65);
+        }
+        25% {
+            color: #ff9f1c; /* orange */
+            text-shadow: 0 0 8px rgba(255,159,28,0.65);
+        }
+        50% {
+            color: #00e5ff; /* cyan */
+            text-shadow: 0 0 8px rgba(0,229,255,0.65);
+        }
+        75% {
+            color: #7f5dff; /* purple */
+            text-shadow: 0 0 8px rgba(127,93,255,0.65);
+        }
+        100% {
+            color: #ff3b3b;
+            text-shadow: 0 0 8px rgba(255,59,59,0.65);
+        }
+    }
+    .project-body {
+        font-family: 'Inter Display', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 0.92rem; /* slightly larger (~3%) for readability */
+        line-height: 1.5;
+        color: rgb(168, 166, 171);
+        max-width: 27rem;
+        position: absolute;
+        left: 0.4rem;
+        bottom: 10.8rem;
+    }
+    .project-view-text {
+        position: absolute;
+        left: 0.4rem;
+        bottom: 1.7rem; /* moved slightly higher */
+        margin: 0;
+        color: rgb(168, 166, 171);
+        font-family: 'Inter Display', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 0.81rem; /* base size for both plus and label */
+        font-weight: 400;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        cursor: pointer;
+    }
+    .project-view-plus {
+        display: inline-block;
+        font-size: 1.02em; /* slightly larger (~2%) than text */
+        line-height: 1;
+        transform-origin: center;
+        transition: transform 0.3s ease-out;
+    }
+    .project-view-label {
+        display: inline-block;
+    }
+    .project-view-text:hover .project-view-plus {
+        transform: rotate(90deg);
+    }
+    .project-view-text:hover .project-view-label {
+        animation: beastRgb 3.5s linear infinite;
+    }
+    .hero-glitch {
+        position: relative;
+    }
+    /* Glitch layers only — do NOT put a competing `animation` on the host element,
+       or it overrides the hero entrance keyframes and the text can snap back to opacity:0. */
+    .hero-glitch.glitch-active::before,
+    .hero-glitch.glitch-active::after {
+        content: attr(data-text);
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        width: auto;
+        text-align: center;
+        mix-blend-mode: screen;
+        opacity: 0.6;
+        pointer-events: none;
+        animation: heroGlitchLayers 160ms steps(2, end) 2;
+    }
+    .landing-hero-brand.hero-glitch.glitch-active::before,
+    .landing-hero-brand.hero-glitch.glitch-active::after {
+        text-indent: 0.22em;
+    }
+    .landing-hero-line-mango.hero-glitch.glitch-active::before,
+    .landing-hero-line-mango.hero-glitch.glitch-active::after {
+        text-indent: 0.2em;
+    }
+    .hero-glitch.glitch-active::before {
+        color: #ff4da6;
+    }
+    .hero-glitch.glitch-active::after {
+        color: #4dffea;
+    }
+    @@keyframes heroGlitchLayers {
+        0% { transform: translate(-1px, 0); }
+        50% { transform: translate(1px, 1px); }
+        100% { transform: translate(-1px, -1px); }
+    }
+    .project-media-wrapper {
+        display: flex;
+        justify-content: flex-end;
+        padding-right: 0;
+    }
+    .project-frame {
+        position: relative;
+        width: 100%;
+        height: 96.8vh;
+        max-height: 96.8vh;
+        border-radius: 26px;
+        overflow: hidden;
+        filter: drop-shadow(0 30px 80px rgba(0,0,0,0.8));
+        margin-right: -0.2rem;
+    }
+    .project-top-label {
+        position: absolute;
+        top: 0.9rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.2rem 0.8rem;
+        font-family: 'VT323', monospace;
+        font-size: 0.85rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.85);
+        z-index: 5;
+    }
+    .project-bottom-label {
+        position: absolute;
+        bottom: 0.9rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-family: 'VT323', monospace;
+        font-size: 0.8rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.9);
+        z-index: 5;
+    }
+    .project-bottom-line {
+        display: block;
+        width: 0.9rem;
+        height: 1px;
+        background: rgba(255,255,255,0.85);
+    }
+    /* see-all button removed by design request */
+    .landing-title-in-notch {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 9%;
+        min-width: 88px;
+        max-width: 150px;
+        height: 3.5%;
+        min-height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 0;
+    }
+    .landing-title-in-notch span {
+        color: #fff;
+        font-family: 'OrithDisplay', cursive;
+        font-size: 0.89rem; /* ~10% larger than previous */
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+    }
+    .rgb-letter {
+        display: inline-block;
+        color: #ff3b3b;
+        text-shadow: 0 0 8px rgba(255,59,59,0.65);
+        animation: beastRgb 3.5s linear infinite;
+        animation-fill-mode: both;
+    }
+    .landing-scroll-in-notch {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 7.5%;
+        min-width: 76px;
+        max-width: 128px;
+        height: 3.5%;
+        min-height: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        z-index: 0;
+    }
+    .landing-scroll-line {
+        display: block;
+        width: 0.9rem;
+        height: 1px;
+        background: rgba(255,255,255,0.8);
+    }
+    .landing-scroll-in-notch span:last-child {
+        color: rgba(255,255,255,0.95);
+        font-family: 'Inter', system-ui, sans-serif;
+        font-size: 0.48rem;
+        font-weight: 500;
+        letter-spacing: 0.19em;
+        text-transform: uppercase;
+        animation: scrollDownHint 1.4s ease-in-out infinite;
+    }
+    @@keyframes scrollDownHint {
+        0%   { transform: translateY(0);     opacity: 1; }
+        40%  { transform: translateY(4px);  opacity: 0.8; }
+        80%  { transform: translateY(0);     opacity: 1; }
+        100% { transform: translateY(0);     opacity: 1; }
+    }
+    .landing-container {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        overflow: hidden;
+        border-radius: 38px;
+        box-shadow: 0 25px 80px -12px rgba(0,0,0,0.7);
+        container-type: inline-size;
+        container-name: hero;
+    }
+    .landing-hero-stage {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        margin: 0;
+        pointer-events: none;
+    }
+    .landing-video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+    }
+    .landing-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: rgba(0,0,0,0.08);
+        pointer-events: none;
+        transition: background 0.3s ease-out;
+    }
+    .landing-container:hover .landing-overlay {
+        background: rgba(0,0,0,0.35);
+    }
+    .landing-transition-overlay {
+        position: absolute;
+        inset: 0;
+        background: #000;
+        opacity: 0;
+        pointer-events: none;
+        clip-path: inset(100% 0% 0% 0%);
+        z-index: 40;
+        transition: none;
+    }
+    .landing-nav-panel {
+        position: absolute;
+        inset: 1.2rem 1.4rem;
+        border-radius: 38px;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: minmax(0, 0.45fr) minmax(0, 0.55fr);
+        color: #111111;
+        font-family: 'Inter Display', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, rgba(16,16,16,0.96), rgba(5,5,5,0.98));
+        box-shadow: 0 28px 80px rgba(0,0,0,0.9);
+    }
+    .landing-nav-left {
+        position: relative;
+        padding: 0;
+        display: flex;
+        align-items: stretch;
+        justify-content: stretch;
+    }
+    .landing-nav-media {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .landing-nav-right {
+        position: relative;
+        padding: 3.4rem 2.8rem 2.4rem 1.8rem;
+        overflow: hidden;
+        background: #ffffff;
+    }
+    .landing-nav-header {
+        position: absolute;
+        top: 1.4rem;
+        left: 1.8rem;
+        right: 2.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end; /* X button group on the right side */
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-size: 0.62rem;
+    }
+    .landing-nav-title {
+        display: none; /* moved brand text to footer */
+    }
+    .landing-nav-header-right {
+        display: flex;
+        flex-direction: row-reverse; /* place X at the far right, text to its left */
+        align-items: center;
+        gap: 0.45rem;
+    }
+    .landing-nav-close {
+        position: relative;
+        width: 1.6rem;
+        height: 1.6rem;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+    }
+    .landing-nav-close span {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 1rem;
+        height: 1px;
+        background: rgba(0,0,0,0.75);
+        transform-origin: center;
+        transition: transform 0.22s ease-out;
+    }
+    .landing-nav-close span:first-child {
+        transform: translate(-50%, -50%) rotate(45deg);
+    }
+    .landing-nav-close span:last-child {
+        transform: translate(-50%, -50%) rotate(-45deg);
+    }
+    .landing-nav-close-label {
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #111111;
+        opacity: 0;
+        transform: translateX(6px);
+        transition: opacity 0.22s ease-out, transform 0.22s ease-out;
+    }
+    .landing-nav-header-right:hover .landing-nav-close-label {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    .landing-nav-header-right:hover .landing-nav-close span:first-child {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    .landing-nav-header-right:hover .landing-nav-close span:last-child {
+        transform: translate(-50%, -50%) rotate(90deg);
+    }
+    .landing-nav-main {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        position: absolute;
+        left: 1.8rem;
+        right: 2.8rem;
+        top: 40%;
+        transform: translateY(-40%);
+    }
+    .landing-nav-main li {
+        display: grid;
+        grid-template-columns: 3.2rem auto 1.4rem; /* more space between number and label */
+        align-items: center;
+        padding: 0.45rem 0;
+        border-bottom: 1px solid rgba(0,0,0,0.06);
+        cursor: pointer;
+    }
+    .landing-nav-index {
+        font-size: 1.36rem; /* ~100% larger than original 0.68rem */
+        letter-spacing: 0.16em;
+        color: #111111;
+    }
+    .landing-nav-label {
+        font-size: 1.56rem; /* ~100% larger than original 0.78rem */
+        letter-spacing: 0.09em;
+        color: #111111;
+        transform-origin: left center;
+        transition: transform 0.25s ease-out;
+    }
+    .landing-nav-plus {
+        justify-self: end;
+        font-size: 0.85rem;
+        opacity: 1;
+        color: #111111;
+    }
+    .landing-nav-main li:hover .landing-nav-label {
+        transform: scale(1.08);
+    }
+    .landing-nav-meta {
+        position: absolute;
+        left: 1.8rem;
+        right: 2.8rem;
+        top: 61%;
+        display: flex;
+        gap: 3rem;
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+    .landing-nav-footer {
+        position: absolute;
+        left: 1.8rem;
+        right: 2.8rem;
+        bottom: 1.8rem;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-end;
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+    .landing-nav-footer-brand {
+        font-family: 'OrithDisplay', cursive;
+        font-size: 2.4rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #111111;
+        padding-top: 0.4rem;
+        padding-bottom: 0.4rem;
+    }
+    .landing-nav-column {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+    .landing-nav-footer-title {
+        color: #111111;
+    }
+    .landing-nav-footer-item {
+        color: #111111;
+    }
+    .landing-hero-text {
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        padding: 0 1.25rem;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+        gap: 0.15rem;
+        flex: 0 1 auto;
+    }
+    @@keyframes elasticIn {
+        0%   { transform: scale(1.5); opacity: 0; filter: blur(8px); }
+        60%  { transform: scale(0.95); opacity: 1; filter: blur(0); }
+        80%  { transform: scale(1.02); }
+        100% { transform: scale(1); }
+    }
+    @@keyframes fadeUp {
+        from { opacity: 0; transform: translateY(40px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    .landing-hero-brand {
+        color: #fff;
+        font-family: 'OrithDisplay', cursive;
+        font-size: clamp(4.92rem, 15.2cqw, 8.91rem);
+        font-weight: 500;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        line-height: 1.05;
+        margin: 0 0 0.35rem 0;
+        padding: 0 0 0.15rem 0;
+        box-sizing: border-box;
+        opacity: 0;
+        animation: elasticIn 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s forwards;
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        text-align: center;
+        text-indent: 0.22em;
+        transform-origin: center center;
+        text-shadow:
+            0 0 10px rgba(255,255,255,0.95),
+            0 0 22px rgba(255,255,255,0.65),
+            0 0 42px rgba(255,255,255,0.4),
+            0 2px 6px rgba(0,0,0,0.35);
+    }
+    .landing-hero-rule {
+        display: block;
+        width: min(11rem, 55vw);
+        height: 1px;
+        margin: 0.4rem auto 0.55rem;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.42), transparent);
+        flex-shrink: 0;
+    }
+    .landing-hero-line-mango {
+        color: rgba(255,255,255,0.94);
+        font-family: 'BiggerDisplay', 'Bebas Neue', system-ui, sans-serif;
+        font-size: clamp(1rem, 3.15cqw, 1.85rem);
+        font-weight: 400;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        line-height: 1.2;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        opacity: 0;
+        animation: fadeUp 0.5s ease-out 0.6s forwards;
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        text-align: center;
+        text-indent: 0.2em;
+        text-shadow:
+            0 0 8px rgba(255,255,255,0.9),
+            0 0 18px rgba(255,255,255,0.55),
+            0 0 32px rgba(255,255,255,0.35),
+            0 1px 4px rgba(0,0,0,0.3);
+    }
+    .landing-hero-line-mango--later {
+        animation-delay: 0.75s;
+    }
+    .project-outer {
+        opacity: 0;
+        animation: fadeUp 0.6s ease-out 0.9s forwards;
+    }
+    @@supports not (font-size: 1cqw) {
+        .landing-hero-brand {
+            font-size: clamp(4.92rem, 14.63vw, 8.91rem);
+        }
+        .landing-hero-line-mango {
+            font-size: clamp(1rem, 3.04vw, 1.85rem);
+        }
+    }
+    .landing-menu-wrap {
+        position: fixed;
+        top: 3.5%;
+        right: 3%;
+        z-index: 120;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.45rem;
+    }
+    .landing-menu-label {
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.9);
+        opacity: 0;
+        transform: translateX(-6px);
+        transition: opacity 0.22s ease-out, transform 0.22s ease-out;
+    }
+    .landing-menu-wrap:hover .landing-menu-label {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    .landing-menu {
+        width: 2.5rem;
+        height: 2.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: rgba(255,255,255,0.9);
+    }
+    .landing-menu-wrap:hover .landing-menu { color: #fff; }
+    .landing-menu span {
+        display: block;
+        width: 1.5rem;
+        height: 2px;
+        background: currentColor;
+        border-radius: 1px;
+    }
+    .landing-border {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 2;
+    }
+</style>
+}
+
+@section scripts {
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+<script>
+(function () {
+    // Hero video rotation
+    var urls = [
+        '@Url.Content("~/Content/video/videohomepage/vid1.mp4")',
+        '@Url.Content("~/Content/video/videohomepage/vid2.mp4")',
+        '@Url.Content("~/Content/video/videohomepage/vid3.mp4")',
+        '@Url.Content("~/Content/video/videohomepage/vid4.mp4")'
+    ];
+    var el = document.getElementById('js-hero-video');
+    if (el && urls.length > 0) {
+        var index = 0;
+        function playNext() {
+            el.src = urls[index];
+            el.load();
+            el.play().catch(function () { });
+            index = (index + 1) % urls.length;
+        }
+        playNext();
+        setInterval(playNext, 3000);
+    }
+
+    // Simple typewriter animation for hero lines
+    (function runTypewriter() {
+        var lines = Array.prototype.slice.call(document.querySelectorAll('.landing-hero-text .js-typer'));
+        if (!lines.length) return;
+
+        var currentLine = 0;
+        var charIndex = 0;
+        var typingSpeed = 45;      // ms per character
+        var linePause = 350;       // pause between lines
+
+        // Store full texts and clear visible content
+        var texts = lines.map(function (el) {
+            var full = (el.textContent || '').trim();
+            el.textContent = '';
+            return full;
+        });
+
+        function typeNextChar() {
+            if (currentLine >= lines.length) return;
+
+            var el = lines[currentLine];
+            var full = texts[currentLine];
+
+            el.textContent = full.slice(0, charIndex + 1);
+            charIndex++;
+
+            if (charIndex < full.length) {
+                setTimeout(typeNextChar, typingSpeed);
+            } else {
+                // brief glitch flash when a line finishes
+                if (el.classList.contains('hero-glitch')) {
+                    el.setAttribute('data-text', full);
+                    el.classList.add('glitch-active');
+                    setTimeout(function () {
+                        el.classList.remove('glitch-active');
+                        el.textContent = full;
+                        el.style.opacity = '1';
+                    }, 200);
+                }
+
+                currentLine++;
+                charIndex = 0;
+                if (currentLine < lines.length) {
+                    setTimeout(typeNextChar, linePause);
+                } else {
+                    // All lines typed — lock final copy + opacity (guards against CSS edge cases)
+                    for (var j = 0; j < lines.length; j++) {
+                        lines[j].textContent = texts[j];
+                        lines[j].style.opacity = '1';
+                    }
+                }
+            }
+        }
+
+        // small delay so video starts first
+        setTimeout(typeNextChar, 400);
+    })();
+
+    // RGB per-letter setup for BEAST PC texts
+    function setupRgbLetters(selector, baseDelay, step) {
+        var nodes = document.querySelectorAll(selector);
+        nodes.forEach(function (node) {
+            if (!node || !node.textContent) return;
+            var text = node.textContent;
+            node.textContent = "";
+            for (var i = 0; i < text.length; i++) {
+                var ch = text[i];
+                var span = document.createElement("span");
+                span.className = "rgb-letter";
+                span.textContent = (ch === " ") ? "\u00A0" : ch;
+                span.style.animationDelay = (baseDelay + i * step) + "s";
+                node.appendChild(span);
+            }
+        });
+    }
+
+    // Apply RGB letter animation to hero notch BEAST PC and section BEAST PC
+    setupRgbLetters(".landing-title-in-notch span", 0.4, 0.18);
+    setupRgbLetters(".project-title", 0.0, 0.22);
+
+    // Scroll animations
+    if (window.gsap && window.ScrollTrigger) {
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Featured product: simple scroll-linked reveal
+        var tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: ".project-outer",
+                start: "top 80%",
+                end: "bottom center",
+                scrub: 0.7
+            }
+        });
+
+        // Right video frame
+        tl.from(".project-frame", {
+            opacity: 0,
+            y: 60,
+            scale: 0.96,
+            duration: 1.1,
+            ease: "power3.out"
+        }, 0);
+
+        // Static labels on left (FEATURED PRODUCT / 01) - glide in from left
+        tl.from([
+            ".project-label",
+            ".project-number"
+        ], {
+            opacity: 0,
+            x: -40,
+            y: 0,
+            duration: 1.0,
+            ease: "expo.out",
+            stagger: 0.08
+        }, 0.05);
+
+        // Title, body and VIEW PRODUCT: stronger glide-in from the left (tied to main timeline scrub)
+        tl.from([
+            ".project-title",
+            ".project-body",
+            ".project-view-text"
+        ], {
+            opacity: 0,
+            x: -40,
+            y: 16,
+            duration: 1.0,
+            ease: "expo.out",
+            stagger: 0.09
+        }, 0.15);
+
+        // (scramble text animation removed by design request)
+    }
+
+    // Hero nav "fake" page transition (Codrops-style crossfade)
+    (function setupHeroNavTransition() {
+        var trigger = document.querySelector(".landing-menu");
+        var overlay = document.querySelector(".landing-transition-overlay");
+        var frame = document.querySelector(".landing-frame");
+        var closeBtn = document.querySelector(".landing-nav-close");
+        if (!trigger || !overlay || !frame || !window.gsap) return;
+
+        var isOpen = false;
+        var busy = false;
+
+        function openPanel() {
+            if (busy || isOpen) return;
+            busy = true;
+            isOpen = true;
+
+            gsap.set(overlay, {
+                opacity: 1,
+                clipPath: "inset(100% 0% 0% 0%)",
+                pointerEvents: "auto"
+            });
+
+            var tl = gsap.timeline({
+                onComplete: function () {
+                    busy = false;
+                }
+            });
+
+            tl.to(frame, {
+                y: "-18vh",
+                opacity: 0.6,
+                duration: 0.9,
+                ease: "power2.inOut"
+            }, 0);
+
+            tl.to(overlay, {
+                clipPath: "inset(0% 0% 0% 0%)",
+                duration: 0.9,
+                ease: "power2.inOut"
+            }, 0);
+        }
+
+        function closePanel() {
+            if (busy || !isOpen) return;
+            busy = true;
+            isOpen = false;
+
+            var tl = gsap.timeline({
+                onComplete: function () {
+                    busy = false;
+                    gsap.set(overlay, {
+                        opacity: 0,
+                        pointerEvents: "none"
+                    });
+                }
+            });
+
+            tl.to(overlay, {
+                clipPath: "inset(100% 0% 0% 0%)",
+                duration: 0.8,
+                ease: "power2.inOut"
+            }, 0);
+
+            tl.to(frame, {
+                y: "0vh",
+                opacity: 1,
+                duration: 0.8,
+                ease: "power2.inOut"
+            }, 0);
+        }
+
+        trigger.addEventListener("click", function (e) {
+            e.preventDefault();
+            if (!isOpen) {
+                openPanel();
+            } else {
+                closePanel();
+            }
+        });
+
+        if (closeBtn) {
+            closeBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                closePanel();
+            });
+        }
+
+        function renumberNav() {
+            try {
+                var items = Array.prototype.slice.call(document.querySelectorAll('.landing-nav-main > li'));
+                var n = 0;
+                items.forEach(function (li) {
+                    if (li && li.style && li.style.display === 'none') return;
+                    var idx = li ? li.querySelector('.landing-nav-index') : null;
+                    if (!idx) return;
+                    n += 1;
+                    idx.textContent = (n < 10 ? ('0' + n) : String(n));
+                });
+            } catch (e) { }
+        }
+
+        // Switch nav item #02 based on session:
+        // - admin: ADMIN (Dashboard)
+        // - user:  MY ACCOUNT
+        // - guest: LOGIN
+        try {
+            var _cur = JSON.parse(sessionStorage.getItem('CurrentUser') || '{}');
+            var _auth = document.getElementById('navAuthLink');
+            if (_auth) {
+                if (_cur && _cur.Role === 'admin') {
+                    _auth.textContent = 'ADMIN';
+                    _auth.setAttribute('href', '@Url.Action("Dashboard", "Admin")');
+                } else if (_cur && _cur.Id) {
+                    _auth.textContent = 'MY ACCOUNT';
+                    _auth.setAttribute('href', '@Url.Action("MyAccount", "Account")');
+                } else {
+                    _auth.textContent = 'LOGIN';
+                    _auth.setAttribute('href', '@Url.Action("LoginPage", "Account")');
+                }
+            }
+            if (_cur && _cur.Role === 'admin') {
+                var _al = document.getElementById('adminNavLink');
+                if (_al) _al.style.display = 'none';
+            }
+        } catch (e) { }
+
+        renumberNav();
+    })();
+})();
+</script>
+}

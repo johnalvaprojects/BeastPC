@@ -1,0 +1,101 @@
+@{
+    ViewBag.Title = "Verify";
+    Layout = "~/Views/Shared/_BeastAuthLayout.cshtml";
+}
+
+<div class="auth-shell">
+    <section class="auth-left">
+        <a class="auth-brand" href="@Url.Action("Index", "Home")">BEASTPC</a>
+        <a class="auth-back" href="@Url.Action("LoginPage", "Account")">&larr; Back to login</a>
+
+        <div class="auth-box">
+            <span class="auth-eyebrow">BEASTPC / VERIFY</span>
+            <h1 class="auth-title">Check your<br/>email.</h1>
+            <p class="auth-sub">We&rsquo;ve sent a 6-digit code to your inbox. Enter it below to finish setting up your account.</p>
+
+            <div class="flash" id="v-flash"></div>
+
+            <form id="v-form" onsubmit="return false;">
+                <div class="code-inputs" id="code-inputs">
+                    <input type="text" inputmode="numeric" maxlength="1" />
+                    <input type="text" inputmode="numeric" maxlength="1" />
+                    <input type="text" inputmode="numeric" maxlength="1" />
+                    <input type="text" inputmode="numeric" maxlength="1" />
+                    <input type="text" inputmode="numeric" maxlength="1" />
+                    <input type="text" inputmode="numeric" maxlength="1" />
+                </div>
+                <button type="submit" class="auth-submit" id="v-submit">Verify account</button>
+            </form>
+
+            <div class="auth-divider">OR</div>
+            <p class="auth-alt">
+                Didn&rsquo;t get the email?
+                <a href="#" id="resend-link">Resend code</a>
+            </p>
+        </div>
+    </section>
+
+    <section class="auth-right">
+        <video autoplay muted loop playsinline>
+            <source src="@Url.Content("~/Content/video/navbar/BlackTopoDesktop.mp4")" type="video/mp4" />
+        </video>
+        <div class="auth-right-caption">
+            <div class="brand">One more step.</div>
+            <div class="line">Verify and start shopping</div>
+        </div>
+    </section>
+</div>
+
+@section scripts {
+<script>
+    (function () {
+        var inputs = document.querySelectorAll('#code-inputs input');
+        var form = document.getElementById('v-form');
+        var btn = document.getElementById('v-submit');
+        var flash = document.getElementById('v-flash');
+        var resend = document.getElementById('resend-link');
+
+        inputs.forEach(function (inp, i) {
+            inp.addEventListener('input', function (e) {
+                inp.value = inp.value.replace(/[^0-9]/g, '');
+                if (inp.value && i < inputs.length - 1) inputs[i + 1].focus();
+            });
+            inp.addEventListener('keydown', function (e) {
+                if (e.key === 'Backspace' && !inp.value && i > 0) inputs[i - 1].focus();
+            });
+            inp.addEventListener('paste', function (e) {
+                var t = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+                if (!t) return;
+                e.preventDefault();
+                for (var j = 0; j < inputs.length && j < t.length; j++) inputs[j].value = t[j];
+                inputs[Math.min(t.length, inputs.length) - 1].focus();
+            });
+        });
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            flash.classList.remove('show', 'success', 'error');
+            var code = '';
+            inputs.forEach(function (i) { code += i.value; });
+            if (code.length !== 6) {
+                flash.textContent = 'Please enter all 6 digits.';
+                flash.classList.add('show', 'error'); return;
+            }
+            btn.disabled = true;
+            btn.textContent = 'Verifying...';
+            setTimeout(function () {
+                flash.textContent = 'Account verified. Redirecting to sign-in...';
+                flash.classList.add('show', 'success');
+                setTimeout(function () { window.location.href = '@Url.Action("LoginPage", "Account")'; }, 900);
+            }, 700);
+        });
+
+        resend.addEventListener('click', function (e) {
+            e.preventDefault();
+            flash.textContent = 'A new code has been sent.';
+            flash.classList.remove('error');
+            flash.classList.add('show', 'success');
+        });
+    })();
+</script>
+}

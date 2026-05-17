@@ -1,0 +1,431 @@
+@{
+    ViewBag.Title = "My Account";
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+
+@section styles {
+<style>
+    .page {
+        min-height: 100vh;
+        padding: 5.5rem 3.2rem 3.2rem 3.2rem;
+    }
+    .wrap {
+        width: 100%;
+        max-width: 1180px;
+        margin: 0 auto;
+    }
+    .title {
+        font-family: 'OrithDisplay', cursive;
+        font-size: 2.1rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+    }
+    .sub {
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        color: rgba(255,255,255,0.45);
+        margin-bottom: 2.2rem;
+        text-transform: uppercase;
+    }
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.2rem;
+        align-items: start;
+    }
+    .card {
+        background: #0e0e0e;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 14px;
+        padding: 1.3rem 1.4rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: rgba(255,255,255,0.14);
+    }
+    .cardTitle {
+        font-size: 0.62rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.5);
+        margin-bottom: 1rem;
+    }
+    .kv {
+        display: grid;
+        grid-template-columns: 140px 1fr;
+        gap: 0.7rem 1rem;
+        font-size: 0.82rem;
+        letter-spacing: 0.03em;
+    }
+    .k { color: rgba(255,255,255,0.35); text-transform: uppercase; font-size: 0.62rem; letter-spacing: 0.22em; padding-top: 0.15rem; }
+    .v { color: rgba(255,255,255,0.85); }
+    .pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.22rem 0.6rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.12);
+        font-size: 0.62rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.75);
+        background: rgba(255,255,255,0.04);
+    }
+    .actions {
+        display: flex;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+        margin-top: 1.2rem;
+    }
+    .btn {
+        padding: 0.55rem 1.05rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,0.16);
+        background: transparent;
+        color: rgba(255,255,255,0.75);
+        font-size: 0.62rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        transition: all 0.18s ease;
+        cursor: pointer;
+    }
+    .btn:hover { background: rgba(255,255,255,0.06); color: #fff; border-color: rgba(255,255,255,0.35); }
+    .btn.primary { background: #fff; color: #000; border-color: #fff; }
+    .btn.primary:hover { background: rgba(255,255,255,0.88); }
+    .btn-cancel {
+        padding: 0.35rem 0.75rem;
+        font-size: 0.58rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        border-radius: 999px;
+        border: 1px solid rgba(255,100,100,0.45);
+        background: rgba(255,70,70,0.12);
+        color: #ff9b9b;
+        cursor: pointer;
+        transition: all 0.18s ease;
+    }
+    .btn-cancel:hover { background: rgba(255,70,70,0.22); color: #fff; border-color: rgba(255,140,140,0.6); }
+
+    .tableWrap {
+        overflow-x: auto;
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 12px;
+        margin-top: 0.2rem;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.78rem;
+        letter-spacing: 0.03em;
+    }
+    thead th {
+        text-align: left;
+        padding: 0.8rem 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        font-size: 0.6rem;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.4);
+        white-space: nowrap;
+    }
+    tbody td {
+        padding: 0.8rem 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+        color: rgba(255,255,255,0.82);
+        white-space: nowrap;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    .muted { color: rgba(255,255,255,0.4); }
+    .empty {
+        padding: 2rem 1rem;
+        text-align: center;
+        color: rgba(255,255,255,0.25);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+    }
+
+    .ma-cancel-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1.25rem;
+        background: rgba(0,0,0,0.78);
+        backdrop-filter: blur(8px);
+    }
+    .ma-cancel-overlay.open { display: flex; }
+    .ma-cancel-box {
+        width: min(420px, 94vw);
+        background: linear-gradient(165deg, #151515 0%, #0a0a0a 100%);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 18px;
+        padding: 1.65rem 1.75rem 1.5rem;
+        box-shadow: 0 28px 80px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    .ma-cancel-kicker {
+        font-size: 0.55rem;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.42);
+        margin-bottom: 0.55rem;
+    }
+    .ma-cancel-title {
+        font-family: 'OrithDisplay', cursive;
+        font-size: 1.45rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #fff;
+        margin: 0 0 0.75rem 0;
+        line-height: 1.15;
+    }
+    .ma-cancel-body {
+        margin: 0 0 1.45rem;
+        font-size: 0.84rem;
+        line-height: 1.55;
+        letter-spacing: 0.04em;
+        color: rgba(255,255,255,0.72);
+    }
+    .ma-cancel-actions {
+        display: flex;
+        gap: 0.65rem;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+    }
+    .ma-cancel-actions .btn { margin: 0; }
+    .ma-cancel-actions .btn.primary { min-width: 112px; text-align: center; }
+    .ma-cancel-actions .btn-danger {
+        border-color: rgba(255,100,100,0.45);
+        color: #ffb4b4;
+        background: rgba(255,60,60,0.12);
+    }
+    .ma-cancel-actions .btn-danger:hover {
+        background: rgba(255,60,60,0.22);
+        color: #fff;
+        border-color: rgba(255,140,140,0.55);
+    }
+
+    @@media (max-width: 980px) {
+        .grid { grid-template-columns: 1fr; }
+        .page { padding: 5.2rem 1.3rem 2.4rem 1.3rem; }
+        .kv { grid-template-columns: 120px 1fr; }
+    }
+</style>
+}
+
+@Html.Partial("_BeastNav")
+
+<div class="page">
+    <div class="wrap">
+        <div class="title">My Account</div>
+        <div class="sub" id="subline">Loading profile…</div>
+
+        <div class="grid">
+            <div class="card">
+                <div class="cardTitle">Profile</div>
+                <div class="kv">
+                    <div class="k">Name</div>
+                    <div class="v" id="pName">—</div>
+                    <div class="k">Username</div>
+                    <div class="v" id="pUser">—</div>
+                    <div class="k">Email</div>
+                    <div class="v" id="pEmail">—</div>
+                    <div class="k">Role</div>
+                    <div class="v"><span class="pill" id="pRole">—</span></div>
+                </div>
+                <div class="actions">
+                    <a class="btn" href="@Url.Action("Shop", "Home")">Shop PCs</a>
+                    <button class="btn primary" id="logoutBtn">Log out</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="cardTitle">My Orders</div>
+                <div class="tableWrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th style="text-align:right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersBody">
+                            <tr><td colspan="5" class="empty">Loading…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="maCancelOverlay" class="ma-cancel-overlay" role="dialog" aria-modal="true" aria-labelledby="maCancelTitle" aria-hidden="true">
+        <div class="ma-cancel-box" onclick="event.stopPropagation();">
+            <div class="ma-cancel-kicker">BeastPC / Orders</div>
+            <h2 id="maCancelTitle" class="ma-cancel-title">Cancel order?</h2>
+            <p id="maCancelBody" class="ma-cancel-body"></p>
+            <div class="ma-cancel-actions">
+                <button type="button" class="btn" id="maCancelDismiss">Keep order</button>
+                <button type="button" class="btn btn-danger" id="maCancelConfirm">Yes, cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+<script>
+    (function () {
+        function peso(v) {
+            try { return "\u20B1" + Number(v || 0).toLocaleString(); } catch (e) { return "PHP " + (v || 0); }
+        }
+        function toDate(d) {
+            if (d == null || d === "") return "—";
+            try {
+                if (typeof d === "number" && !isNaN(d)) {
+                    var n = new Date(d);
+                    return isNaN(n.getTime()) ? "—" : n.toLocaleDateString();
+                }
+                var s = String(d);
+                // MVC JsonResult: "/Date(1713830400000)/"
+                var m = /\/Date\((\d+)\)\//.exec(s);
+                if (m) {
+                    var dt = new Date(parseInt(m[1], 10));
+                    return isNaN(dt.getTime()) ? "—" : dt.toLocaleDateString();
+                }
+                var dt2 = new Date(s);
+                return isNaN(dt2.getTime()) ? "—" : dt2.toLocaleDateString();
+            } catch (e) { return "—"; }
+        }
+
+        var sub = document.getElementById("subline");
+        var curRaw = sessionStorage.getItem("CurrentUser");
+        if (!curRaw) { window.location.href = "/Account/LoginPage"; return; }
+
+        var cur = {};
+        try { cur = JSON.parse(curRaw || "{}"); } catch (e) { }
+        if (!cur || !cur.Id) { window.location.href = "/Account/LoginPage"; return; }
+
+        var fullName = ((cur.FirstName || cur.FName || "") + " " + (cur.LastName || cur.LName || "")).trim();
+        document.getElementById("pName").textContent = fullName || "User";
+        document.getElementById("pUser").textContent = cur.Username ? ("\u0040" + cur.Username) : "—";
+        document.getElementById("pEmail").textContent = cur.Email || "—";
+        document.getElementById("pRole").textContent = (cur.Role || "user").toUpperCase();
+        sub.textContent = "Signed in as " + (cur.Username ? ("\u0040" + cur.Username) : (cur.Email || "user")) + ".";
+
+        document.getElementById("logoutBtn").addEventListener("click", function () {
+            sessionStorage.removeItem("CurrentUser");
+            window.location.href = "/Account/LoginPage";
+        });
+
+        function loadOrders() {
+            fetch("/BeastPc/GetOrdersByUser?userId=" + encodeURIComponent(cur.Id), { method: "GET" })
+                .then(function (r) { return r.json(); })
+                .then(function (j) {
+                    if (j && j.ok) renderOrders(j.orders || []);
+                    else renderOrders([]);
+                })
+                .catch(function () { renderOrders([]); });
+        }
+
+        function renderOrders(rows) {
+            var body = document.getElementById("ordersBody");
+            if (!rows || !rows.length) {
+                body.innerHTML = "<tr><td colspan='5' class='empty'>No orders yet</td></tr>";
+                return;
+            }
+            body.innerHTML = rows.map(function (o) {
+                var created = o.CreatedAt != null ? o.CreatedAt : o.createdAt;
+                var st = String(o.Status || "pending").trim().toLowerCase();
+                var canCancel = (st === "pending" || st === "processing");
+                var cancelCell = canCancel
+                    ? "<button type=\"button\" class=\"btn-cancel\" data-cancel-order=\"" + o.Id + "\">Cancel</button>"
+                    : "<span class=\"muted\">—</span>";
+                return (
+                    "<tr>" +
+                    "<td style='font-family:Bebas Neue, system-ui, sans-serif; letter-spacing:0.06em'>BP-" + o.Id + "</td>" +
+                    "<td>" + peso(o.TotalAmount) + "</td>" +
+                    "<td class='muted' style='text-transform:uppercase;letter-spacing:0.14em;font-size:0.62rem'>" + (o.Status || "pending") + "</td>" +
+                    "<td class='muted'>" + toDate(created) + "</td>" +
+                    "<td style='text-align:right'>" + cancelCell + "</td>" +
+                    "</tr>"
+                );
+            }).join("");
+        }
+
+        var pendingCancelBtn = null;
+
+        function openCancelModal(orderId, triggerBtn) {
+            var ov = document.getElementById("maCancelOverlay");
+            var body = document.getElementById("maCancelBody");
+            var title = document.getElementById("maCancelTitle");
+            pendingCancelBtn = triggerBtn;
+            title.textContent = "Cancel order BP-" + orderId + "?";
+            body.textContent = "This order will be marked cancelled. You cannot undo this from your account.";
+            ov.classList.add("open");
+            ov.setAttribute("aria-hidden", "false");
+            document.getElementById("maCancelConfirm").focus();
+        }
+
+        function closeCancelModal() {
+            var ov = document.getElementById("maCancelOverlay");
+            ov.classList.remove("open");
+            ov.setAttribute("aria-hidden", "true");
+            pendingCancelBtn = null;
+        }
+
+        document.getElementById("maCancelDismiss").addEventListener("click", function () {
+            closeCancelModal();
+        });
+        document.getElementById("maCancelOverlay").addEventListener("click", function (e) {
+            if (e.target === e.currentTarget) closeCancelModal();
+        });
+        document.addEventListener("keydown", function (e) {
+            if (e.key !== "Escape") return;
+            var ov = document.getElementById("maCancelOverlay");
+            if (ov && ov.classList.contains("open")) closeCancelModal();
+        });
+        document.getElementById("maCancelConfirm").addEventListener("click", function () {
+            var btn = pendingCancelBtn;
+            var oid = btn && btn.getAttribute("data-cancel-order");
+            if (!btn || !oid) { closeCancelModal(); return; }
+            closeCancelModal();
+            btn.disabled = true;
+            fetch("/BeastPc/CancelMyOrder", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ OrderId: Number(oid), UserId: Number(cur.Id) })
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (j) {
+                    if (j && j.ok) loadOrders();
+                    else { alert((j && j.error) ? j.error : "Could not cancel order."); btn.disabled = false; }
+                })
+                .catch(function () {
+                    alert("Network error.");
+                    btn.disabled = false;
+                });
+        });
+
+        document.getElementById("ordersBody").addEventListener("click", function (e) {
+            var btn = e.target && e.target.closest ? e.target.closest("[data-cancel-order]") : null;
+            if (!btn) return;
+            var oid = btn.getAttribute("data-cancel-order");
+            if (!oid) return;
+            openCancelModal(oid, btn);
+        });
+
+        loadOrders();
+    })();
+</script>
+}
+

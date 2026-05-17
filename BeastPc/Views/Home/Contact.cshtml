@@ -1,0 +1,245 @@
+﻿@{
+    ViewBag.Title = "Contact";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+
+@Html.Partial("_BeastNav")
+
+@section styles {
+<style>
+    body { background: #000; color: #fff; }
+    .contact-page {
+        min-height: 100vh;
+        padding: 7rem 2.5rem 4rem 2.5rem;
+        font-family: 'Inter Display', system-ui, sans-serif;
+    }
+    .contact-wrap { max-width: 1100px; margin: 0 auto; }
+
+    .eyebrow {
+        font-size: 0.7rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.5);
+    }
+    .contact-title {
+        font-family: 'OrithDisplay', cursive;
+        font-size: clamp(3rem, 8vw, 6rem);
+        letter-spacing: 0.05em;
+        line-height: 0.9;
+        margin: 0.4rem 0 1.2rem 0;
+        text-transform: uppercase;
+    }
+    .contact-lede {
+        max-width: 680px;
+        font-size: 1rem;
+        line-height: 1.55;
+        color: rgba(255,255,255,0.7);
+        margin-bottom: 3rem;
+    }
+
+    .contact-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 2.2rem;
+    }
+
+    .panel {
+        background: #0b0b0b;
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 14px;
+        padding: 1.8rem 2rem;
+    }
+    .panel h3 {
+        margin: 0 0 1.4rem 0;
+        font-size: 0.78rem;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+    }
+
+    .form-row { display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 1rem; }
+    .form-row.cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-row label {
+        font-size: 0.66rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.55);
+    }
+    .form-row input, .form-row textarea, .form-row select {
+        background: #050505;
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #fff;
+        padding: 0.75rem 0.9rem;
+        font-family: inherit;
+        font-size: 0.82rem;
+        border-radius: 6px;
+        outline: none;
+        transition: border-color 0.2s ease;
+    }
+    .form-row textarea { min-height: 140px; resize: vertical; }
+    .form-row input:focus, .form-row textarea:focus, .form-row select:focus { border-color: rgba(255,255,255,0.4); }
+
+    .submit-btn {
+        width: 100%;
+        padding: 1rem;
+        background: #fff;
+        color: #000;
+        border: none;
+        border-radius: 999px;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 0.7rem;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        transition: transform 0.2s ease;
+    }
+    .submit-btn:hover { transform: translateY(-1px); }
+
+    .info-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.4rem;
+    }
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+    .info-item .tag {
+        font-size: 0.62rem;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.45);
+    }
+    .info-item .val {
+        font-family: 'Bebas Neue', system-ui, sans-serif;
+        font-size: 1.4rem;
+        letter-spacing: 0.04em;
+        color: #fff;
+    }
+    .info-item a { color: #fff; text-decoration: none; }
+    .info-item a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+
+    .hours-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.4rem 0;
+        border-bottom: 1px dashed rgba(255,255,255,0.08);
+        font-size: 0.78rem;
+        color: rgba(255,255,255,0.75);
+    }
+    .hours-row:last-child { border-bottom: none; }
+
+    .flash {
+        display: none;
+        margin-top: 1rem;
+        padding: 0.8rem 1rem;
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 8px;
+        font-size: 0.74rem;
+        letter-spacing: 0.06em;
+        color: rgba(255,255,255,0.85);
+        background: rgba(255,255,255,0.03);
+    }
+    .flash.show { display: block; }
+</style>
+}
+
+<main class="contact-page">
+    <div class="contact-wrap">
+        <span class="eyebrow">BEASTPC / CONTACT</span>
+        <h1 class="contact-title">Let&rsquo;s talk specs.</h1>
+        <p class="contact-lede">
+            Questions about a model on the site, warranty or RMA, or delivery timing? Drop us a message and we&rsquo;ll get back within one business day.
+        </p>
+
+        <div class="contact-grid">
+            <div class="panel">
+                <h3>Send a message</h3>
+                <form id="contact-form" onsubmit="return false;">
+                    <div class="form-row cols-2">
+                        <div class="form-row">
+                            <label for="c-first">First name</label>
+                            <input id="c-first" type="text" required />
+                        </div>
+                        <div class="form-row">
+                            <label for="c-last">Last name</label>
+                            <input id="c-last" type="text" required />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label for="c-email">Email</label>
+                        <input id="c-email" type="email" required />
+                    </div>
+                    <div class="form-row">
+                        <label for="c-topic">Topic</label>
+                        <select id="c-topic">
+                            <option>Product / model question</option>
+                            <option>Pre-sale question</option>
+                            <option>Warranty / RMA</option>
+                            <option>Partnership</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label for="c-msg">Message</label>
+                        <textarea id="c-msg" placeholder="Tell us which system or order you&rsquo;re asking about..." required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn" id="c-submit">Send message</button>
+                    <div class="flash" id="c-flash">Thanks &mdash; your message is queued. We&rsquo;ll get back shortly.</div>
+                </form>
+            </div>
+
+            <div class="panel">
+                <h3>Reach us directly</h3>
+                <div class="info-list">
+                    <div class="info-item">
+                        <span class="tag">Email</span>
+                        <a class="val" href="mailto:info&#64;beastpc.local">info&#64;beastpc.local</a>
+                    </div>
+                    <div class="info-item">
+                        <span class="tag">Support</span>
+                        <a class="val" href="mailto:support&#64;beastpc.local">support&#64;beastpc.local</a>
+                    </div>
+                    <div class="info-item">
+                        <span class="tag">HQ</span>
+                        <span class="val">Manila, Philippines</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="tag">Hours</span>
+                        <div>
+                            <div class="hours-row"><span>Mon &ndash; Fri</span><span>10:00 &ndash; 19:00</span></div>
+                            <div class="hours-row"><span>Saturday</span><span>12:00 &ndash; 17:00</span></div>
+                            <div class="hours-row"><span>Sunday</span><span>Closed</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section scripts {
+<script>
+    (function () {
+        var form = document.getElementById('contact-form');
+        var flash = document.getElementById('c-flash');
+        var btn = document.getElementById('c-submit');
+        if (!form) return;
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+            setTimeout(function () {
+                flash.classList.add('show');
+                btn.textContent = 'Sent';
+                form.reset();
+                setTimeout(function () {
+                    btn.disabled = false;
+                    btn.textContent = 'Send message';
+                    flash.classList.remove('show');
+                }, 3000);
+            }, 600);
+        });
+    })();
+</script>
+}

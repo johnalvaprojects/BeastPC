@@ -1,0 +1,70 @@
+@{
+    ViewBag.Title = "Table User";
+    Layout = "~/Views/Shared/_RegistrationLayout.cshtml";
+}
+
+<div class="flex min-h-screen" ng-app="BeastPc" ng-controller="BeastPcController" ng-init="checkArray()">
+    <div class="flex-1 bg-white p-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-6 custom-font-title">TABLE USER (UPDATE / DELETE)</h1>
+
+        <div class="flex flex-wrap gap-4 mb-6">
+            <a href="@Url.Action("Welcome", "Account")" class="btn-beast-secondary px-4 py-2">MAIN</a>
+            <a href="@Url.Action("LoginPage", "Account")" class="btn-beast-secondary px-4 py-2">LOGIN</a>
+            <a href="@Url.Action("Registration", "Account")" class="btn-beast px-4 py-2">ADD</a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1 custom-font-label">First Name</label>
+                <input type="text" ng-model="FName" class="w-full px-3 py-2 border-2 border-black focus:outline-none custom-font-body" placeholder="First name" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1 custom-font-label">Last Name</label>
+                <input type="text" ng-model="LName" class="w-full px-3 py-2 border-2 border-black focus:outline-none custom-font-body" placeholder="Last name" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1 custom-font-label">Username</label>
+                <input type="text" ng-model="Username" class="w-full px-3 py-2 border-2 border-black focus:outline-none custom-font-body" placeholder="Username" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1 custom-font-label">Password</label>
+                <input type="password" ng-model="Password" class="w-full px-3 py-2 border-2 border-black focus:outline-none custom-font-body" placeholder="Password" />
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="beast-table">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Username</th>
+                        <th class="beast-table-actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="u in newArray">
+                        <td>{{ u.FName }}</td>
+                        <td>{{ u.LName }}</td>
+                        <td>{{ u.Username }}</td>
+                        <td class="beast-table-actions">
+                            <button type="button" class="btn-beast-secondary mr-1" ng-click="loadRowIntoForm(u)">Edit</button>
+                            <button type="button" class="btn-beast mr-1" ng-click="updateFunc($index)">Update</button>
+                            <button type="button" class="btn-beast mr-1" ng-click="deleteFunc($index)">Delete</button>
+                        </td>
+                    </tr>
+                    <tr ng-if="newArray.length === 0">
+                        <td colspan="4" class="text-center text-gray-500 py-8">No users yet.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="@Url.Content("~/Scripts/angular.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/BeastPc/Module.js")"></script>
+    <script src="@Url.Content("~/Scripts/BeastPc/Service.js")"></script>
+    <script src="@Url.Content("~/Scripts/BeastPc/Controller.js")"></script>
+}

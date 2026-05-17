@@ -1,0 +1,42 @@
+# Visual Studio / .NET
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+[Bb]uild/
+[Ll]og/
+[Ll]ogs/
+
+# NuGet (restore in Visual Studio: right-click solution → Restore NuGet Packages)
+packages/
+
+# IDE / local
+.idea/
+.vscode/
+.cursor/
+
+# Secrets / local config
+.env
+.env.*
+*.local.config
+
+# Database exports (may contain real orders/users — keep local only)
+**/beastpc.sql
+**/beastpc_export.sql
+App_Data/sql/local-backups/
+
+# Large hero/nav videos (~380MB) — required locally; see README
+BeastPc/Content/video/**/*.mp4
+BeastPc/Content/video/**/*.mov
+BeastPc/Content/video/**/*.avi
+BeastPc/Content/video/**/*.mkv
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini

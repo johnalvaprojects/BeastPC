@@ -1,0 +1,358 @@
+@* ================== SHARED BEASTPC NAV (hamburger + overlay) ================== *@
+@* Include on any page via: @@Html.Partial("_BeastNav") *@
+
+<style>
+    /* Fonts */
+    @@font-face {
+        font-family: 'OrithDisplay';
+        src: url('@Url.Content("~/Content/fonts/orith-font/orithdisplay-regular.otf")') format("opentype");
+        font-weight: 400; font-style: normal; font-display: swap;
+    }
+    @@font-face {
+        font-family: 'Inter Display';
+        src: url('@Url.Content("~/Content/fonts/Inter-4.1/extras/otf/InterDisplay-Medium.otf")') format("opentype");
+        font-weight: 500; font-style: normal; font-display: swap;
+    }
+    @@font-face {
+        font-family: 'Bebas Neue';
+        src: url('@Url.Content("~/Content/fonts/bebas_neue/BebasNeue-Regular.otf")') format("opentype");
+        font-weight: 400; font-style: normal; font-display: swap;
+    }
+
+    /* Hamburger trigger */
+    .landing-menu-wrap {
+        position: fixed;
+        top: 3.5%;
+        right: 3%;
+        z-index: 140;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.45rem;
+    }
+    .landing-menu-label {
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.9);
+        opacity: 0;
+        transform: translateX(-6px);
+        transition: opacity 0.22s ease-out, transform 0.22s ease-out;
+        font-family: 'Inter Display', system-ui, sans-serif;
+    }
+    .landing-menu-wrap:hover .landing-menu-label {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    .landing-menu {
+        width: 2.5rem;
+        height: 2.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: rgba(255,255,255,0.9);
+    }
+    .landing-menu-wrap:hover .landing-menu { color: #fff; }
+    .landing-menu span {
+        display: block;
+        width: 1.5rem;
+        height: 2px;
+        background: currentColor;
+        border-radius: 1px;
+    }
+
+    /* Overlay */
+    .landing-transition-overlay {
+        position: fixed;
+        inset: 0;
+        background: #000;
+        opacity: 0;
+        pointer-events: none;
+        clip-path: inset(100% 0% 0% 0%);
+        z-index: 150;
+    }
+    .landing-nav-panel {
+        position: absolute;
+        inset: 1.2rem 1.4rem;
+        border-radius: 38px;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: minmax(0, 0.45fr) minmax(0, 0.55fr);
+        color: #111;
+        font-family: 'Inter Display', system-ui, sans-serif;
+        background: linear-gradient(135deg, rgba(16,16,16,0.96), rgba(5,5,5,0.98));
+        box-shadow: 0 28px 80px rgba(0,0,0,0.9);
+    }
+    .landing-nav-left {
+        position: relative;
+        display: flex;
+        align-items: stretch;
+        justify-content: stretch;
+    }
+    .landing-nav-media {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .landing-nav-right {
+        position: relative;
+        padding: 3.4rem 2.8rem 2.4rem 1.8rem;
+        overflow: hidden;
+        background: #ffffff;
+    }
+    .landing-nav-header {
+        position: absolute;
+        top: 1.4rem;
+        left: 1.8rem;
+        right: 2.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        font-size: 0.62rem;
+    }
+    .landing-nav-title { display: none; }
+    .landing-nav-header-right {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        gap: 0.45rem;
+    }
+    .landing-nav-close {
+        position: relative;
+        width: 1.6rem;
+        height: 1.6rem;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+    }
+    .landing-nav-close span {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 1rem;
+        height: 1px;
+        background: rgba(0,0,0,0.75);
+        transform-origin: center;
+        transition: transform 0.22s ease-out;
+    }
+    .landing-nav-close span:first-child { transform: translate(-50%, -50%) rotate(45deg); }
+    .landing-nav-close span:last-child  { transform: translate(-50%, -50%) rotate(-45deg); }
+    .landing-nav-close-label {
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #111;
+        opacity: 0;
+        transform: translateX(6px);
+        transition: opacity 0.22s ease-out, transform 0.22s ease-out;
+    }
+    .landing-nav-header-right:hover .landing-nav-close-label { opacity: 1; transform: translateX(0); }
+    .landing-nav-header-right:hover .landing-nav-close span:first-child { transform: translate(-50%, -50%) rotate(0deg); }
+    .landing-nav-header-right:hover .landing-nav-close span:last-child  { transform: translate(-50%, -50%) rotate(90deg); }
+
+    .landing-nav-main {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        position: absolute;
+        left: 1.8rem;
+        right: 2.8rem;
+        top: 40%;
+        transform: translateY(-40%);
+    }
+    .landing-nav-main li {
+        display: grid;
+        grid-template-columns: 3.2rem auto 1.4rem;
+        align-items: center;
+        padding: 0.45rem 0;
+        border-bottom: 1px solid rgba(0,0,0,0.06);
+        cursor: pointer;
+    }
+    .landing-nav-index {
+        font-size: 1.36rem;
+        letter-spacing: 0.16em;
+        color: #111;
+    }
+    .landing-nav-label {
+        font-size: 1.56rem;
+        letter-spacing: 0.09em;
+        color: #111;
+        transform-origin: left center;
+        transition: transform 0.25s ease-out;
+        text-decoration: none;
+    }
+    .landing-nav-plus {
+        justify-self: end;
+        font-size: 0.85rem;
+        color: #111;
+    }
+    .landing-nav-main li:hover .landing-nav-label { transform: scale(1.08); }
+    .landing-nav-meta {
+        position: absolute;
+        left: 1.8rem;
+        right: 2.8rem;
+        top: 61%;
+        display: flex;
+        gap: 3rem;
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+    .landing-nav-column { display: flex; flex-direction: column; gap: 0.35rem; }
+    .landing-nav-footer-title, .landing-nav-footer-item { color: #111; }
+    .landing-nav-footer {
+        position: absolute;
+        left: 1.8rem;
+        right: 2.8rem;
+        bottom: 1.8rem;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-end;
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+    .landing-nav-footer-brand {
+        font-family: 'OrithDisplay', cursive;
+        font-size: 2.4rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #111;
+        padding: 0.4rem 0;
+    }
+</style>
+
+<div class="landing-menu-wrap">
+    <span class="landing-menu-label">OPEN</span>
+    <button type="button" class="landing-menu" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+</div>
+
+<div class="landing-transition-overlay">
+    <div class="landing-nav-panel">
+        <div class="landing-nav-left">
+            <video class="landing-nav-media" autoplay muted loop playsinline>
+                <source src="@Url.Content("~/Content/video/navbar/BlackTopoDesktop.mp4")" type="video/mp4" />
+            </video>
+        </div>
+        <div class="landing-nav-right">
+            <div class="landing-nav-header">
+                <span class="landing-nav-title"></span>
+                <div class="landing-nav-header-right">
+                    <button type="button" class="landing-nav-close" aria-label="Close navigation">
+                        <span></span><span></span>
+                    </button>
+                    <span class="landing-nav-close-label">CLOSE</span>
+                </div>
+            </div>
+            <ol class="landing-nav-main">
+                <li><span class="landing-nav-index">01</span><a class="landing-nav-label" href="@Url.Action("Index", "Home")">HOME</a><span class="landing-nav-plus">+</span></li>
+                <li>
+                    <span class="landing-nav-index">02</span>
+                    <a class="landing-nav-label" id="navAuthLink" href="@Url.Action("LoginPage", "Account")">LOGIN</a>
+                    <span class="landing-nav-plus">+</span>
+                </li>
+                <li><span class="landing-nav-index">03</span><a class="landing-nav-label" href="@Url.Action("Shop", "Home")">SHOP</a><span class="landing-nav-plus">+</span></li>
+                <li><span class="landing-nav-index">04</span><a class="landing-nav-label" href="@Url.Action("About", "Home")">ABOUT</a><span class="landing-nav-plus">+</span></li>
+                <li><span class="landing-nav-index">05</span><a class="landing-nav-label" href="@Url.Action("Contact", "Home")">CONTACT</a><span class="landing-nav-plus">+</span></li>
+                <li id="adminNavLink" style="display:none"><span class="landing-nav-index">06</span><a class="landing-nav-label" href="@Url.Action("Dashboard", "Admin")">ADMIN</a><span class="landing-nav-plus">+</span></li>
+            </ol>
+            <div class="landing-nav-meta">
+                <div class="landing-nav-column">
+                    <span class="landing-nav-footer-title">FOLLOW</span>
+                    <span class="landing-nav-footer-item">Instagram</span>
+                    <span class="landing-nav-footer-item">YouTube</span>
+                </div>
+                <div class="landing-nav-column">
+                    <span class="landing-nav-footer-title">CONTACT</span>
+                    <span class="landing-nav-footer-item">info&#64;beastpc.local</span>
+                </div>
+            </div>
+            <div class="landing-nav-footer">
+                <span class="landing-nav-footer-brand">BEASTPC</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<script>
+    (function setupBeastNav() {
+        var trigger = document.querySelector('.landing-menu');
+        var overlay = document.querySelector('.landing-transition-overlay');
+        var closeBtn = document.querySelector('.landing-nav-close');
+        if (!trigger || !overlay || !window.gsap) return;
+
+        var isOpen = false, busy = false;
+        function openPanel() {
+            if (busy || isOpen) return;
+            busy = true; isOpen = true;
+            gsap.set(overlay, { opacity: 1, clipPath: 'inset(100% 0% 0% 0%)', pointerEvents: 'auto' });
+            gsap.to(overlay, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.9, ease: 'power2.inOut', onComplete: function () { busy = false; } });
+        }
+        function closePanel() {
+            if (busy || !isOpen) return;
+            busy = true; isOpen = false;
+            gsap.to(overlay, {
+                clipPath: 'inset(100% 0% 0% 0%)', duration: 0.8, ease: 'power2.inOut',
+                onComplete: function () { busy = false; gsap.set(overlay, { opacity: 0, pointerEvents: 'none' }); }
+            });
+        }
+        trigger.addEventListener('click', function (e) { e.preventDefault(); isOpen ? closePanel() : openPanel(); });
+        if (closeBtn) closeBtn.addEventListener('click', function (e) { e.preventDefault(); closePanel(); });
+
+        function renumberNav() {
+            try {
+                var items = Array.prototype.slice.call(document.querySelectorAll('.landing-nav-main > li'));
+                var n = 0;
+                items.forEach(function (li) {
+                    // skip hidden admin li
+                    if (li && li.style && li.style.display === 'none') return;
+                    var idx = li ? li.querySelector('.landing-nav-index') : null;
+                    if (!idx) return;
+                    n += 1;
+                    idx.textContent = (n < 10 ? ('0' + n) : String(n));
+                });
+            } catch (e) { }
+        }
+
+        // Switch nav item #02 based on session:
+        // - admin: ADMIN (Dashboard)
+        // - user:  MY ACCOUNT
+        // - guest: LOGIN
+        try {
+            var _cur = JSON.parse(sessionStorage.getItem('CurrentUser') || '{}');
+            var _auth = document.getElementById('navAuthLink');
+            if (_auth) {
+                if (_cur && _cur.Role === 'admin') {
+                    _auth.textContent = 'ADMIN';
+                    _auth.setAttribute('href', '@Url.Action("Dashboard", "Admin")');
+                } else if (_cur && _cur.Id) {
+                    _auth.textContent = 'MY ACCOUNT';
+                    _auth.setAttribute('href', '@Url.Action("MyAccount", "Account")');
+                } else {
+                    _auth.textContent = 'LOGIN';
+                    _auth.setAttribute('href', '@Url.Action("LoginPage", "Account")');
+                }
+            }
+            if (_cur && _cur.Role === 'admin') {
+                var _al = document.getElementById('adminNavLink');
+                // Avoid duplicate ADMIN entry; item #02 already becomes ADMIN
+                if (_al) _al.style.display = 'none';
+            }
+        } catch (e) {}
+
+        renumberNav();
+    })();
+</script>

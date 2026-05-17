@@ -1,0 +1,53 @@
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_RegistrationLayout.cshtml";
+}
+
+<div class="flex min-h-screen" ng-app="BeastPc" ng-controller="BeastPcController" ng-init="checkArray()">
+    <div class="flex-1 bg-white relative flex flex-col justify-center items-center px-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8 custom-font-title">LOGIN</h1>
+
+        <div class="w-full max-w-md space-y-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2 custom-font-label">USERNAME</label>
+                <input type="text" class="w-full px-4 py-3 border-2 border-black focus:outline-none custom-font-body"
+                       ng-model="loginUsername" placeholder="Username" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2 custom-font-label">PASSWORD</label>
+                <input type="password" class="w-full px-4 py-3 border-2 border-black focus:outline-none custom-font-body"
+                       ng-model="loginPassword" placeholder="Password" />
+            </div>
+
+            <div class="flex justify-end -mt-2">
+                <a href="@Url.Action("ForgotPassword", "Account")" class="custom-font-body link-hover-dark underline text-gray-600 text-sm">
+                    Forgot password?
+                </a>
+            </div>
+
+            <div>
+                <button type="button" class="w-full btn-beast py-3" ng-click="loginFunc()">LOGIN</button>
+            </div>
+        </div>
+
+        <p class="mt-8 text-gray-600 custom-font-body">
+            <a href="@Url.Action("Registration", "Account")" class="link-hover-dark underline">Register here</a> if you don't have an account.
+        </p>
+
+        <div ng-show="accountAlert.show" class="bp-auth-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="login-alert-title" ng-click="dismissAccountAlert()">
+            <div class="bp-auth-modal" ng-click="$event.stopPropagation()">
+                <div class="bp-auth-modal-kicker">BeastPC</div>
+                <h2 id="login-alert-title" class="bp-auth-modal-title custom-font-title">Notice</h2>
+                <p class="bp-auth-modal-body custom-font-body">{{accountAlert.message}}</p>
+                <button type="button" class="bp-auth-modal-ok custom-font-button" ng-click="dismissAccountAlert()">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="@Url.Content("~/Scripts/angular.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/BeastPc/Module.js")"></script>
+    <script src="@Url.Content("~/Scripts/BeastPc/Service.js")"></script>
+    <script src="@Url.Content("~/Scripts/BeastPc/Controller.js")"></script>
+}

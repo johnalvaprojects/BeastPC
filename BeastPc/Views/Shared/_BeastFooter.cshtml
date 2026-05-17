@@ -1,0 +1,168 @@
+can you@*
+    _BeastFooter.cshtml — zarcerog.com–style layout, BeastPC colors & typography
+      • Full viewport (min-height: 100vh)
+      • Top status strip • Centered pillar: accent tagline + mega email • Link row • Bottom legal bar
+*@
+<style>
+@@font-face {
+    font-family: 'BfFooterDisplay';
+    src: url('@Url.Content("~/Content/fonts/orith-font/orithdisplay-regular.otf")') format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+.bf-zr {
+    min-height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient(120% 80% at 50% -20%, #1a0a0a 0%, #060606 45%, #030303 100%);
+    color: #f4f4f4;
+    font-family: 'Inter', ui-monospace, system-ui, -apple-system, sans-serif;
+    overflow: hidden;
+    border-top: 1px solid rgba(214,40,40,0.12);
+}
+
+.bf-zr-accent { color: #e62e2e; }
+.bf-zr-inner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: clamp(2rem, 5vw, 3.75rem) clamp(5vw, 9vw, 12%);
+}
+
+.bf-zr-channel {
+    font-size: clamp(0.53rem, 0.88vw, 0.62rem);
+    font-weight: 600;
+    letter-spacing: 0.38em;
+    text-transform: uppercase;
+    opacity: 0.95;
+    flex-shrink: 0;
+}
+
+.bf-zr-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(1.75rem, 4vh, 2.75rem);
+    padding: clamp(2rem, 5vh, 5rem) 0;
+}
+
+.bf-zr-tagline {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: clamp(0.54rem, 0.88vw, 0.68rem);
+    font-weight: 600;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    line-height: 1.6;
+    max-width: 36rem;
+    margin: 0;
+}
+
+.bf-zr-mail {
+    display: block;
+    font-family: 'BfFooterDisplay', 'Bebas Neue', 'Inter', system-ui, sans-serif;
+    font-size: clamp(1.5rem, 5.6vw, 4.95rem);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    line-height: 0.95;
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+    word-break: break-word;
+    hyphens: none;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+    text-shadow: 0 0 40px rgba(230,46,46,0.08);
+}
+.bf-zr-mail:hover {
+    color: #ffeded;
+    text-shadow: 0 0 52px rgba(230,46,46,0.35);
+}
+
+.bf-zr-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: clamp(1rem, 2.8vw, 2.35rem);
+    row-gap: 0.85rem;
+}
+
+.bf-zr-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: clamp(0.57rem, 0.88vw, 0.68rem);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(245,245,245,0.92);
+    text-decoration: none;
+    transition: color 0.18s ease, opacity 0.18s ease;
+}
+.bf-zr-link:hover { color: #e62e2e; opacity: 1; }
+.bf-zr-arr {
+    font-size: 0.56em;
+    opacity: 0.75;
+    transform: translate(0.05em, -0.08em);
+    display: inline-block;
+}
+
+.bf-zr-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    padding-top: clamp(2rem, 4vh, 3rem);
+    flex-shrink: 0;
+}
+
+.bf-zr-crumb {
+    font-size: clamp(0.49rem, 0.74vw, 0.56rem);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245,245,245,0.32);
+}
+
+.bf-zr-payoff {
+    font-size: clamp(0.49rem, 0.74vw, 0.56rem);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(245,245,245,0.35);
+}
+
+@@media (max-width: 640px) {
+    .bf-zr-links { gap: 0.85rem 1.35rem; }
+    .bf-zr-footer { flex-direction: column; align-items: flex-start; }
+}
+</style>
+
+<footer class="bf-zr" role="contentinfo">
+    <div class="bf-zr-inner">
+        <div class="bf-zr-channel bf-zr-accent" aria-hidden="false">&#47; SIGNAL HOT &#47; SUPPORT LINE ONLINE</div>
+
+        <div class="bf-zr-center">
+            <p class="bf-zr-tagline bf-zr-accent">CUSTOM PCS THAT OUTLAST THE HYPE CYCLE.</p>
+            <a class="bf-zr-mail" href="mailto:info&#64;beastpc.gg">INFO&#64;BEASTPC.GG</a>
+
+            <nav class="bf-zr-links" aria-label="Footer links">
+                <a class="bf-zr-link" href="@Url.Action("Shop", "Home")">Store <span class="bf-zr-arr" aria-hidden="true">↗</span></a>
+                <a class="bf-zr-link" href="@Url.Action("About", "Home")">About <span class="bf-zr-arr" aria-hidden="true">↗</span></a>
+                <a class="bf-zr-link" href="@Url.Action("Contact", "Home")">Contact <span class="bf-zr-arr" aria-hidden="true">↗</span></a>
+                <a class="bf-zr-link" href="#">GitHub <span class="bf-zr-arr" aria-hidden="true">↗</span></a>
+                <a class="bf-zr-link" href="#">LinkedIn <span class="bf-zr-arr" aria-hidden="true">↗</span></a>
+                <a class="bf-zr-link" href="#">Instagram <span class="bf-zr-arr" aria-hidden="true">↗</span></a>
+                <a class="bf-zr-link" href="#">Discord <span class="bf-zr-arr" aria-hidden="true">↗</span></a>
+            </nav>
+        </div>
+
+        <div class="bf-zr-footer">
+            <div class="bf-zr-crumb">&copy;&nbsp;BeastPC&nbsp;2026 &mdash;&nbsp;<span class="bf-zr-accent" style="opacity:.55">HTTPS://BEASTPC</span></div>
+            <div class="bf-zr-payoff">BUILT PRECISE &mdash; SHIPPED READY TO ROLL</div>
+        </div>
+    </div>
+</footer>

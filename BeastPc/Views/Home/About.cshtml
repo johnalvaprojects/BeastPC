@@ -1,0 +1,228 @@
+﻿@{
+    ViewBag.Title = "About";
+    Layout = "~/Views/Shared/_HomeFooterLayout.cshtml";
+}
+
+@Html.Partial("_BeastNav")
+
+@section styles {
+<style>
+    body { background: #000; color: #fff; }
+    .about-page {
+        min-height: 100vh;
+        padding: 7rem 2.5rem 4rem 2.5rem;
+        font-family: 'Inter Display', system-ui, sans-serif;
+    }
+    .about-wrap { max-width: 1100px; margin: 0 auto; }
+
+    .eyebrow {
+        font-size: 0.7rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.5);
+    }
+    .about-hero-title {
+        font-family: 'OrithDisplay', cursive;
+        font-size: clamp(3.5rem, 9vw, 7rem);
+        letter-spacing: 0.05em;
+        line-height: 0.9;
+        margin: 0.4rem 0 1.8rem 0;
+        text-transform: uppercase;
+    }
+    .about-lede {
+        max-width: 760px;
+        font-size: 1.05rem;
+        line-height: 1.55;
+        color: rgba(255,255,255,0.78);
+        letter-spacing: 0.01em;
+    }
+
+    .stat-grid {
+        margin-top: 3.5rem;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+    }
+    .stat {
+        padding: 1.6rem 1.4rem;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 12px;
+        background: rgba(255,255,255,0.02);
+    }
+    .stat-num {
+        font-family: 'Bebas Neue', system-ui, sans-serif;
+        font-size: 2.6rem;
+        letter-spacing: 0.05em;
+        line-height: 1;
+    }
+    .stat-label {
+        margin-top: 0.6rem;
+        font-size: 0.64rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.55);
+    }
+
+    .section {
+        margin-top: 4.5rem;
+        display: grid;
+        grid-template-columns: 0.4fr 0.6fr;
+        gap: 3rem;
+        align-items: start;
+    }
+    .section-title {
+        font-family: 'OrithDisplay', cursive;
+        font-size: 2.2rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        line-height: 0.95;
+    }
+    .section-body {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: rgba(255,255,255,0.72);
+    }
+    .section-body p + p { margin-top: 1rem; }
+
+    .values-grid {
+        margin-top: 1.3rem;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.8rem;
+    }
+    .value-card {
+        padding: 1.3rem 1.2rem;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 10px;
+        background: rgba(255,255,255,0.02);
+    }
+    .value-card .tag {
+        font-size: 0.62rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.45);
+    }
+    .value-card .h {
+        font-family: 'Bebas Neue', system-ui, sans-serif;
+        font-size: 1.45rem;
+        letter-spacing: 0.04em;
+        margin: 0.4rem 0 0.5rem 0;
+        text-transform: uppercase;
+    }
+    .value-card p {
+        font-size: 0.82rem;
+        line-height: 1.5;
+        color: rgba(255,255,255,0.65);
+        margin: 0;
+    }
+
+    .cta-band {
+        margin-top: 4.5rem;
+        padding: 3rem 2.2rem;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #0f0f0f, #050505);
+        border: 1px solid rgba(255,255,255,0.06);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+    }
+    .cta-band h3 {
+        font-family: 'OrithDisplay', cursive;
+        font-size: 2.2rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin: 0;
+    }
+    .cta-band a {
+        flex-shrink: 0;
+        padding: 1rem 2rem;
+        background: #fff;
+        color: #000;
+        border-radius: 999px;
+        text-decoration: none;
+        font-size: 0.7rem;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        transition: transform 0.2s ease;
+    }
+    .cta-band a:hover { transform: translateY(-2px); }
+</style>
+}
+
+<main class="about-page">
+    <div class="about-wrap">
+        <span class="eyebrow">BEASTPC / ABOUT</span>
+        <h1 class="about-hero-title">Built for the<br/>obsessed.</h1>
+        <p class="about-lede">
+            BeastPC is a boutique gaming PC brand. We design fixed configurations, assemble
+            complete systems in-house, quality-check every unit, and ship ready-to-plug-in
+            machines&mdash;no part lists, no guesswork, just performance out of the box.
+        </p>
+
+        <div class="stat-grid">
+            <div class="stat">
+                <div class="stat-num">1,200+</div>
+                <div class="stat-label">Systems shipped</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">48hr</div>
+                <div class="stat-label">QA validation window</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">2yr</div>
+                <div class="stat-label">Limited hardware warranty</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num">5.0&#9733;</div>
+                <div class="stat-label">Customer rating</div>
+            </div>
+        </div>
+
+        <section class="section">
+            <div class="section-title">Our<br/>Story</div>
+            <div class="section-body">
+                <p>
+                    BeastPC started with one mission: sell gaming PCs that actually match what
+                    is printed on the page. Each model is a curated stack of parts, assembled
+                    and cabled the same way every time, thermally checked, and run through a
+                    48-hour validation before it leaves our bench.
+                </p>
+                <p>
+                    We are not a parts marketplace and we don&rsquo;t take one-off custom commissions.
+                    You choose a finished BeastPC configuration; we ship that exact pre-tuned system,
+                    boxed and insured, ready to unbox and play.
+                </p>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-title">What<br/>We Value</div>
+            <div class="section-body">
+                <div class="values-grid">
+                    <div class="value-card">
+                        <span class="tag">01</span>
+                        <div class="h">Performance</div>
+                        <p>Each model is specced to hit a clear performance target&mdash;no mystery SKUs or vague &ldquo;up to&rdquo; claims.</p>
+                    </div>
+                    <div class="value-card">
+                        <span class="tag">02</span>
+                        <div class="h">Craft</div>
+                        <p>Clean cable routing, airflow-first layouts, and tight fit-and-finish on every unit we ship.</p>
+                    </div>
+                    <div class="value-card">
+                        <span class="tag">03</span>
+                        <div class="h">Support</div>
+                        <p>Diagnostics, driver help, and warranty guidance from the same team that prepared your system.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-band">
+            <h3>Ready to pick your beast?</h3>
+            <a href="@Url.Action("Shop", "Home")">See the lineup</a>
+        </section>
+    </div>
+</main>
+

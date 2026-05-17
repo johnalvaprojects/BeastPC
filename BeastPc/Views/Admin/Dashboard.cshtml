@@ -1,0 +1,1278 @@
+@{
+    ViewBag.Title = "Admin Dashboard";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section styles {
+<style>
+    /* ===== Fonts ===== */
+    @@font-face {
+        font-family: 'OrithDisplay';
+        src: url('@Url.Content("~/Content/fonts/orith-font/orithdisplay-regular.otf")') format("opentype");
+        font-weight: 400; font-style: normal; font-display: swap;
+    }
+    @@font-face {
+        font-family: 'Inter Display';
+        src: url('@Url.Content("~/Content/fonts/Inter-4.1/extras/otf/InterDisplay-Medium.otf")') format("opentype");
+        font-weight: 500; font-style: normal; font-display: swap;
+    }
+    @@font-face {
+        font-family: 'Bebas Neue';
+        src: url('@Url.Content("~/Content/fonts/bebas_neue/BebasNeue-Regular.otf")') format("opentype");
+        font-weight: 400; font-style: normal; font-display: swap;
+    }
+
+    /* ===== Reset / base ===== */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; width: 100%; margin: 0; padding: 0; }
+    body {
+        background: #060606;
+        color: #fff;
+        font-family: 'Inter Display', system-ui, sans-serif;
+        overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: inherit; }
+
+    /* ===== Layout ===== */
+    /* Sidebar is position:fixed so we just offset dash-main with margin-left */
+    .dash-shell {
+        display: block;
+        min-height: 100vh;
+    }
+
+    /* ===== Sidebar ===== */
+    .sidebar {
+        position: fixed;
+        top: 0; left: 0;
+        width: 240px;
+        height: 100vh;
+        background: #0b0b0b;
+        border-right: 1px solid rgba(255,255,255,0.06);
+        display: flex;
+        flex-direction: column;
+        z-index: 50;
+        transition: width 0.3s ease;
+        overflow: hidden;
+    }
+    .dash-shell.collapsed .sidebar { width: 64px; }
+
+    .sidebar-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 1.5rem 1.2rem 1.2rem 1.2rem;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .sidebar-logo-mark {
+        flex-shrink: 0;
+        width: 32px; height: 32px;
+        background: #fff;
+        border-radius: 6px;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .sidebar-logo-mark span {
+        font-family: 'OrithDisplay', cursive;
+        font-size: 0.85rem;
+        color: #000;
+        letter-spacing: 0.04em;
+    }
+    .sidebar-logo-text {
+        font-family: 'OrithDisplay', cursive;
+        font-size: 1.1rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #fff;
+        transition: opacity 0.2s, width 0.2s;
+    }
+    .dash-shell.collapsed .sidebar-logo-text { opacity: 0; width: 0; }
+
+    .sidebar-nav {
+        flex: 1;
+        padding: 1rem 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    .nav-section-label {
+        padding: 0.6rem 1.2rem 0.3rem 1.2rem;
+        font-size: 0.58rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.3);
+        white-space: nowrap;
+        transition: opacity 0.2s;
+    }
+    .dash-shell.collapsed .nav-section-label { opacity: 0; }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.65rem 1.2rem;
+        font-size: 0.78rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.55);
+        border-left: 2px solid transparent;
+        transition: all 0.18s ease;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .nav-item:hover { color: #fff; background: rgba(255,255,255,0.04); }
+    .nav-item.active {
+        color: #fff;
+        border-left-color: #fff;
+        background: rgba(255,255,255,0.05);
+    }
+    .nav-item .nav-icon {
+        flex-shrink: 0;
+        width: 18px; height: 18px;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .nav-item .nav-icon svg {
+        width: 14px; height: 14px;
+        stroke: currentColor;
+    }
+    .nav-item .nav-label { transition: opacity 0.2s; }
+    .dash-shell.collapsed .nav-item .nav-label { opacity: 0; width: 0; }
+
+    .sidebar-footer {
+        padding: 1rem 1.2rem;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .sidebar-avatar {
+        flex-shrink: 0;
+        width: 32px; height: 32px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.12);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.78rem;
+        letter-spacing: 0.05em;
+        font-family: 'OrithDisplay', cursive;
+    }
+    .sidebar-user-info { transition: opacity 0.2s; }
+    .dash-shell.collapsed .sidebar-user-info { opacity: 0; width: 0; }
+    .sidebar-user-name {
+        font-size: 0.76rem;
+        letter-spacing: 0.06em;
+        color: #fff;
+    }
+    .sidebar-user-role {
+        font-size: 0.6rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.45);
+    }
+
+    /* ===== Collapse toggle ===== */
+    .sidebar-toggle {
+        position: fixed;
+        top: 1.35rem;
+        left: 228px;
+        z-index: 60;
+        width: 22px; height: 22px;
+        background: #181818;
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        transition: left 0.3s ease;
+    }
+    .dash-shell.collapsed .sidebar-toggle { left: 52px; }
+    .sidebar-toggle svg {
+        width: 11px; height: 11px;
+        fill: none;
+        stroke: rgba(255,255,255,0.65);
+        stroke-width: 2;
+        stroke-linecap: round;
+        transition: transform 0.3s ease;
+    }
+    .dash-shell.collapsed .sidebar-toggle svg { transform: rotate(180deg); }
+
+    /* ===== Main content ===== */
+    .dash-main {
+        margin-left: 240px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: #060606;
+        transition: margin-left 0.3s ease;
+    }
+    .dash-shell.collapsed .dash-main { margin-left: 64px; }
+
+    /* ===== Top bar ===== */
+    .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        height: 60px;
+        background: rgba(6,6,6,0.85);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 1.8rem;
+        gap: 1rem;
+    }
+    .topbar-left {
+        display: flex;
+        flex-direction: column;
+    }
+    .topbar-eyebrow {
+        font-size: 0.6rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.4);
+    }
+    .topbar-title {
+        font-family: 'OrithDisplay', cursive;
+        font-size: 1.3rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        line-height: 1;
+    }
+    .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .topbar-clock {
+        font-family: 'Bebas Neue', system-ui, sans-serif;
+        font-size: 1.1rem;
+        letter-spacing: 0.1em;
+        color: rgba(255,255,255,0.6);
+    }
+    .topbar-badge {
+        padding: 0.3rem 0.75rem;
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 999px;
+        font-size: 0.6rem;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.85);
+    }
+    .topbar-logout {
+        padding: 0.4rem 1rem;
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 999px;
+        font-size: 0.62rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.6);
+        background: transparent;
+        transition: all 0.2s ease;
+    }
+    .topbar-logout:hover { color: #fff; border-color: rgba(255,255,255,0.4); }
+
+    /* ===== Page content ===== */
+    .dash-content {
+        flex: 1;
+        padding: 2rem 2.2rem 3rem 2.2rem;
+        max-width: 1400px;
+        width: 100%;
+    }
+
+    /* ===== Stat cards ===== */
+    .stat-row {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    .stat-card {
+        background: #0e0e0e;
+        border: 1px solid rgba(255,255,255,0.07);
+        border-radius: 12px;
+        padding: 1.4rem 1.5rem 1.2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        position: relative;
+        overflow: hidden;
+        min-width: 0;
+        transition: border-color 0.2s ease;
+    }
+    .stat-card:hover { border-color: rgba(255,255,255,0.14); }
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: var(--accent, rgba(255,255,255,0.12));
+    }
+    .stat-label {
+        font-size: 0.6rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.4);
+        white-space: nowrap;
+    }
+    .stat-value {
+        font-family: 'Bebas Neue', system-ui, sans-serif;
+        font-size: 2.8rem;
+        letter-spacing: 0.03em;
+        line-height: 1;
+        color: #fff;
+        margin-top: 0.2rem;
+    }
+    .stat-sub {
+        font-size: 0.62rem;
+        letter-spacing: 0.08em;
+        color: rgba(255,255,255,0.32);
+        white-space: nowrap;
+    }
+
+    .order-status-chart-card {
+        align-items: stretch;
+    }
+    .order-chart-canvas-wrap {
+        position: relative;
+        flex: 1;
+        width: 100%;
+        min-height: 292px;
+        max-height: 420px;
+    }
+    .order-chart-placeholder {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 1rem;
+        color: rgba(255,255,255,0.35);
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+    .order-chart-caption {
+        margin-top: 0.85rem !important;
+        white-space: normal;
+        max-width: 100%;
+        line-height: 1.45;
+    }
+
+    /* ===== Tab switcher ===== */
+    .tab-row {
+        display: flex;
+        gap: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        margin-bottom: 1.5rem;
+    }
+    .tab-btn {
+        padding: 0.7rem 1.3rem;
+        font-size: 0.7rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.45);
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -1px;
+        transition: all 0.18s ease;
+    }
+    .tab-btn:hover { color: rgba(255,255,255,0.75); }
+    .tab-btn.active {
+        color: #fff;
+        border-bottom-color: #fff;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ===== Data table ===== */
+    .data-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.9rem;
+        gap: 1rem;
+    }
+    .data-title {
+        font-size: 0.72rem;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.85);
+    }
+    .data-search {
+        background: #0d0d0d;
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #fff;
+        padding: 0.5rem 0.85rem;
+        font-family: inherit;
+        font-size: 0.76rem;
+        letter-spacing: 0.04em;
+        border-radius: 6px;
+        outline: none;
+        width: 220px;
+        transition: border-color 0.2s ease;
+    }
+    .data-search:focus { border-color: rgba(255,255,255,0.35); }
+    .action-btn {
+        padding: 0.5rem 1.1rem;
+        border-radius: 6px;
+        font-family: inherit;
+        font-size: 0.66rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        border: 1px solid rgba(255,255,255,0.15);
+        background: transparent;
+        color: rgba(255,255,255,0.7);
+        transition: all 0.18s ease;
+    }
+    .action-btn:hover { background: rgba(255,255,255,0.07); color: #fff; }
+    .action-btn.primary {
+        background: #fff;
+        color: #000;
+        border-color: #fff;
+    }
+    .action-btn.primary:hover { background: rgba(255,255,255,0.88); }
+    .action-btn.danger {
+        border-color: rgba(255,80,80,0.3);
+        color: rgba(255,120,120,0.8);
+    }
+    .action-btn.danger:hover { background: rgba(255,80,80,0.08); color: #ff7070; }
+
+    .data-table-wrap {
+        overflow-x: auto;
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 10px;
+    }
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.78rem;
+        letter-spacing: 0.03em;
+    }
+    .data-table thead tr {
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .data-table th {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        font-size: 0.6rem;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.4);
+        white-space: nowrap;
+    }
+    .data-table td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+        color: rgba(255,255,255,0.82);
+        vertical-align: middle;
+    }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .data-table tbody tr:hover td { background: rgba(255,255,255,0.025); }
+
+    .badge {
+        display: inline-block;
+        padding: 0.22rem 0.6rem;
+        border-radius: 999px;
+        font-size: 0.6rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+    .badge-active  { background: rgba(120,255,180,0.1); color: #7fffa0; border: 1px solid rgba(120,255,180,0.2); }
+    .badge-pending { background: rgba(255,200,80,0.1); color: #ffc850; border: 1px solid rgba(255,200,80,0.2); }
+    .badge-processing { background: rgba(180,160,255,0.12); color: #c4b5fd; border: 1px solid rgba(180,160,255,0.22); }
+    .badge-inactive{ background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.08); }
+    .badge-admin   { background: rgba(180,120,255,0.12); color: #c87fff; border: 1px solid rgba(180,120,255,0.2); }
+    .badge-user    { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.55); border: 1px solid rgba(255,255,255,0.08); }
+    .badge-shipped { background: rgba(80,180,255,0.1); color: #50b4ff; border: 1px solid rgba(80,180,255,0.2); }
+    .badge-cancel  { background: rgba(255,80,80,0.1); color: #ff7070; border: 1px solid rgba(255,80,80,0.2); }
+
+    .order-status-select {
+        min-width: 148px;
+        max-width: 200px;
+        width: 100%;
+        padding: 0.38rem 2rem 0.38rem 0.65rem;
+        font-size: 0.68rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.88);
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 6px;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='rgba(255,255,255,0.5)' d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.5rem center;
+    }
+    .order-status-select:focus {
+        outline: none;
+        border-color: rgba(255,255,255,0.35);
+    }
+    .order-status-select option {
+        background: #141414;
+        color: #fff;
+    }
+
+    .table-actions { display: flex; gap: 0.35rem; }
+
+    .build-thumb {
+        width: 44px;
+        height: 36px;
+        border-radius: 6px;
+        background: #1a1a1a;
+        border: 1px solid rgba(255,255,255,0.07);
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+    .build-thumb svg {
+        width: 16px;
+        height: 16px;
+        color: rgba(255,255,255,0.2);
+        stroke: rgba(255,255,255,0.2);
+    }
+
+    .empty-row td {
+        text-align: center;
+        padding: 2.5rem;
+        color: rgba(255,255,255,0.25);
+        font-size: 0.78rem;
+        letter-spacing: 0.1em;
+    }
+
+    /* ===== Modal ===== */
+    .modal-bg {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.75);
+        backdrop-filter: blur(4px);
+        z-index: 200;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+    .modal-bg.open { display: flex; }
+
+    /* Compact confirm overlay (replaces native confirm()) */
+    .admin-confirm-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.78);
+        backdrop-filter: blur(6px);
+        z-index: 260;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+    .admin-confirm-overlay.open { display: flex; }
+    .admin-confirm-box {
+        background: linear-gradient(160deg, #141414 0%, #0a0a0a 100%);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 18px;
+        width: min(400px, 94vw);
+        padding: 1.75rem 1.85rem;
+        box-shadow: 0 24px 64px rgba(0,0,0,0.55), 0 0 1px rgba(255,255,255,0.06) inset;
+    }
+    .admin-confirm-kicker {
+        font-size: 0.55rem;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.4);
+        margin-bottom: 0.55rem;
+    }
+    .admin-confirm-msg {
+        margin: 0 0 1.55rem;
+        font-size: 0.95rem;
+        line-height: 1.55;
+        letter-spacing: 0.02em;
+        color: rgba(255,255,255,0.88);
+    }
+    .admin-confirm-actions {
+        display: flex;
+        gap: 0.65rem;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+    }
+    .admin-confirm-actions .action-btn {
+        flex: 0 1 auto;
+        min-width: 104px;
+    }
+    .admin-confirm-overlay .action-btn.primary.confirm-destructive {
+        background: rgba(255,70,70,0.2);
+        color: #ffc4c4;
+        border-color: rgba(255,100,100,0.48);
+    }
+    .admin-confirm-overlay .action-btn.primary.confirm-destructive:hover {
+        background: rgba(255,70,70,0.32);
+        color: #ffe0e0;
+        border-color: rgba(255,140,140,0.58);
+    }
+
+    .modal {
+        background: #0f0f0f;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 16px;
+        width: min(820px, 96vw);
+        max-height: 92vh;
+        overflow-y: auto;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
+    .modal::-webkit-scrollbar { width: 4px; }
+    .modal::-webkit-scrollbar-track { background: transparent; }
+    .modal::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+    .modal-header {
+        padding: 1.6rem 2rem 1.2rem 2rem;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    .modal-header-text {}
+    .modal-eyebrow {
+        font-size: 0.58rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.35);
+        margin-bottom: 0.3rem;
+    }
+    .modal-title {
+        font-family: 'OrithDisplay', cursive;
+        font-size: 2rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        line-height: 1;
+        margin: 0;
+    }
+    .modal-close {
+        flex-shrink: 0;
+        width: 30px; height: 30px;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 50%;
+        color: rgba(255,255,255,0.5);
+        font-size: 1.1rem;
+        line-height: 1;
+        display: flex; align-items: center; justify-content: center;
+        transition: all 0.18s;
+        margin-top: 0.1rem;
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    .modal-body {
+        padding: 1.6rem 2rem;
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 2rem;
+    }
+
+    /* Left column — image preview */
+    .modal-image-col {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    .image-preview-box {
+        width: 100%;
+        aspect-ratio: 4/3;
+        background: #141414;
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+    }
+    .image-preview-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: none;
+    }
+    .image-preview-box img.loaded { display: block; }
+    .image-preview-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        color: rgba(255,255,255,0.2);
+    }
+    .image-preview-placeholder svg { width: 32px; height: 32px; }
+    .image-preview-placeholder span { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; }
+    .image-preview-box.has-img .image-preview-placeholder { display: none; }
+
+    /* Right column — fields */
+    .modal-fields-col { display: flex; flex-direction: column; gap: 0; }
+    .form-section-label {
+        font-size: 0.56rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.28);
+        padding: 0.9rem 0 0.5rem 0;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        margin-top: 0.4rem;
+    }
+    .form-section-label:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+
+    .form-row { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 0.75rem; }
+    .form-row.cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0; }
+    .form-row.cols-2 > .form-row { margin-bottom: 0; }
+    .form-row label {
+        font-size: 0.6rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.45);
+    }
+    .form-row input, .form-row select, .form-row textarea {
+        background: #161616;
+        border: 1px solid rgba(255,255,255,0.09);
+        color: #fff;
+        padding: 0.65rem 0.85rem;
+        font-family: inherit;
+        font-size: 0.82rem;
+        border-radius: 7px;
+        outline: none;
+        transition: border-color 0.2s, background 0.2s;
+        width: 100%;
+    }
+    .form-row input:focus, .form-row select:focus, .form-row textarea:focus {
+        border-color: rgba(255,255,255,0.35);
+        background: #1a1a1a;
+    }
+    .form-row select option { background: #161616; }
+    .form-row textarea { min-height: 72px; resize: vertical; }
+    .form-row input[type="number"] { -moz-appearance: textfield; }
+    .form-row input[type="number"]::-webkit-outer-spin-button,
+    .form-row input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    .modal-footer {
+        padding: 1.2rem 2rem 1.6rem 2rem;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        display: flex;
+        gap: 0.6rem;
+        justify-content: flex-end;
+    }
+</style>
+}
+
+@* Guard: redirect non-admins client-side *@
+<script>
+    (function () {
+        var cur = sessionStorage.getItem('CurrentUser');
+        if (!cur) { window.location.href = '@Url.Action("LoginPage", "Account")'; return; }
+        try {
+            var u = JSON.parse(cur);
+            if (!u || u.Role !== 'admin') { window.location.href = '@Url.Action("Index", "Home")'; }
+        } catch (e) { window.location.href = '@Url.Action("LoginPage", "Account")'; }
+    })();
+</script>
+
+<div class="dash-shell" id="dashShell" ng-app="BeastPcAdmin" ng-controller="AdminDashController">
+
+    @* ===== SIDEBAR ===== *@
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-mark"><span>BP</span></div>
+            <span class="sidebar-logo-text">BEASTPC</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Overview</div>
+            <a class="nav-item" ng-class="{active: activeTab==='overview'}" href="#" ng-click="switchTab('overview'); $event.preventDefault();">
+                <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg></span>
+                <span class="nav-label">Dashboard</span>
+            </a>
+
+            <div class="nav-section-label">Manage</div>
+            <a class="nav-item" ng-class="{active: activeTab==='builds'}" href="#" ng-click="switchTab('builds'); $event.preventDefault();">
+                <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="14" height="10" rx="1.5"/><path d="M4 4V3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v1"/><line x1="8" y1="7" x2="8" y2="11"/><line x1="6" y1="9" x2="10" y2="9"/></svg></span>
+                <span class="nav-label">Builds</span>
+            </a>
+            <a class="nav-item" ng-class="{active: activeTab==='orders'}" href="#" ng-click="switchTab('orders'); $event.preventDefault();">
+                <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2h2l2 7h6l2-5H6"/><circle cx="7" cy="13" r="1"/><circle cx="12" cy="13" r="1"/></svg></span>
+                <span class="nav-label">Orders</span>
+            </a>
+            <a class="nav-item" ng-class="{active: activeTab==='users'}" href="#" ng-click="switchTab('users'); $event.preventDefault();">
+                <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg></span>
+                <span class="nav-label">Users</span>
+            </a>
+
+            <div class="nav-section-label">Site</div>
+            <a class="nav-item" href="@Url.Action("Index", "Home", null, Request.Url != null ? Request.Url.Scheme : Uri.UriSchemeHttps)">
+                <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8L8 2l6 6"/><path d="M4 6v7h3v-4h2v4h3V6"/></svg></span>
+                <span class="nav-label">Homepage</span>
+            </a>
+            <a class="nav-item" href="@Url.Action("Shop", "Home", null, Request.Url != null ? Request.Url.Scheme : Uri.UriSchemeHttps)">
+                <span class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="14" height="10" rx="1.5"/><line x1="5" y1="8" x2="11" y2="8"/><line x1="8" y1="5" x2="8" y2="11"/></svg></span>
+                <span class="nav-label">Store</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-avatar" id="sidebarAvatar">—</div>
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-name" id="sidebarName">Admin</div>
+                <div class="sidebar-user-role">Administrator</div>
+            </div>
+        </div>
+    </aside>
+
+    @* ===== COLLAPSE TOGGLE ===== *@
+    <button class="sidebar-toggle" id="sidebarToggle" title="Toggle sidebar">
+        <svg viewBox="0 0 16 16"><polyline points="10,4 6,8 10,12"/></svg>
+    </button>
+
+    @* ===== MAIN ===== *@
+    <div class="dash-main">
+
+        @* ===== TOP BAR ===== *@
+        <header class="topbar">
+            <div class="topbar-left">
+                <span class="topbar-eyebrow">BEASTPC / ADMIN</span>
+                <span class="topbar-title" id="topbarTitle">Dashboard</span>
+            </div>
+            <div class="topbar-right">
+                <span class="topbar-clock" id="topbarClock">00:00:00</span>
+                <span class="topbar-badge">Administrator</span>
+                <button class="topbar-logout" id="logoutBtn">Log out</button>
+            </div>
+        </header>
+
+        @* ===== PAGE CONTENT ===== *@
+        <div class="dash-content">
+
+            @* ===== CARDS (dynamic) ===== *@
+            <div class="stat-row">
+                <div class="stat-card"
+                     ng-repeat="c in cardData track by $index"
+                     ng-style="{'--accent': c.Accent || 'rgba(255,255,255,0.12)'}">
+                    <div class="stat-label">{{c.Title}}</div>
+                    <div class="stat-value">{{c.Value}}</div>
+                    <div class="stat-sub">{{c.Subtitle}}</div>
+                </div>
+            </div>
+
+            @* ===== CHART (dynamic) ===== *@
+            <div style="display:grid;grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.8rem;">
+                <div class="stat-card order-status-chart-card" style="--accent: rgba(255,255,255,0.12)">
+                    <div class="stat-label" style="margin-bottom:0.85rem;">Orders by status</div>
+                    <div class="order-chart-canvas-wrap">
+                        <canvas ng-show="!chartPlaceholder" class="chart chart-horizontal-bar"
+                                chart-data="orderStatusData"
+                                chart-labels="orderStatusLabels"
+                                chart-colors="orderStatusColors"
+                                chart-options="orderStatusOptions"></canvas>
+                        <div ng-show="chartPlaceholder" class="order-chart-placeholder">
+                            No orders yet — chart will populate when orders exist
+                        </div>
+                    </div>
+                    <div class="stat-sub order-chart-caption">Counts by status · hover a bar for totals and share</div>
+                </div>
+            </div>
+
+            @* ===== TABS ===== *@
+            <div class="tab-row" id="tabRow">
+                <button class="tab-btn" ng-class="{active: activeTab==='overview'}" ng-click="switchTab('overview')">Overview</button>
+                <button class="tab-btn" ng-class="{active: activeTab==='builds'}" ng-click="switchTab('builds')">Builds</button>
+                <button class="tab-btn" ng-class="{active: activeTab==='orders'}" ng-click="switchTab('orders')">Orders</button>
+                <button class="tab-btn" ng-class="{active: activeTab==='users'}" ng-click="switchTab('users')">Users</button>
+            </div>
+
+            @* OVERVIEW panel *@
+            <div class="tab-panel" id="panel-overview" ng-class="{active: activeTab==='overview'}">
+                <div class="data-header">
+                    <span class="data-title">Dashboard cards</span>
+                    <button class="action-btn primary" type="button" ng-click="openNewDashboardCard()">+ Add card</button>
+                </div>
+                <p style="font-size:0.78rem;color:rgba(255,255,255,0.45);letter-spacing:0.08em;margin:0 0 1rem 0;">
+                    Cards are stored in MySQL (<span style="color:rgba(255,255,255,0.65)">admin_dashboard_cards</span>) and values are computed on the server from live data.
+                </p>
+                <div class="data-table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="width:72px">Order</th>
+                                <th>Title</th>
+                                <th>Metric</th>
+                                <th style="width:96px">Active</th>
+                                <th style="width:220px"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-if="!cardDefs.length" class="empty-row"><td colspan="5">No definitions found (defaults are created automatically on first dashboard load).</td></tr>
+                            <tr ng-repeat="c in cardDefs track by c.Id">
+                                <td style="color:rgba(255,255,255,0.35)">{{c.SortOrder}}</td>
+                                <td>
+                                    <div style="font-weight:600;letter-spacing:0.04em">{{c.Title}}</div>
+                                    <div style="font-size:0.66rem;color:rgba(255,255,255,0.35);margin-top:0.15rem;">{{c.Subtitle}}</div>
+                                </td>
+                                <td style="color:rgba(255,255,255,0.55)">
+                                    {{c.MetricKey}}
+                                    <span ng-if="c.MetricKey==='literal'"> — {{c.LiteralValue}}</span>
+                                </td>
+                                <td><span class="badge" ng-class="c.IsActive ? 'badge-active' : 'badge-inactive'">{{c.IsActive ? 'Yes' : 'No'}}</span></td>
+                                <td>
+                                    <div class="table-actions">
+                                        <button class="action-btn" type="button" ng-click="editDashboardCard(c)">Edit</button>
+                                        <button class="action-btn danger" type="button" ng-click="deleteDashboardCardDef(c)">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            @* BUILDS panel *@
+            <div class="tab-panel" id="panel-builds" ng-class="{active: activeTab==='builds'}">
+                <div class="data-header">
+                    <span class="data-title">PC Builds</span>
+                    <div style="display:flex;gap:0.5rem;align-items:center;">
+                        <input class="data-search" type="text" placeholder="Search builds..." ng-model="searchBuilds" />
+                        <button class="action-btn primary" ng-click="openAddModal()">+ Add build</button>
+                    </div>
+                </div>
+                <div class="data-table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="width:48px"></th>
+                                <th>Name</th>
+                                <th>CPU</th>
+                                <th>GPU</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="builds-tbody">
+                            <tr ng-if="(builds | filter:searchBuilds).length===0" class="empty-row"><td colspan="8">No builds found.</td></tr>
+                            <tr ng-repeat="b in builds | filter:searchBuilds track by b.Id">
+                                <td>
+                                    <div class="build-thumb" ng-style="b.ImageUrl ? {'background-image':'url('+b.ImageUrl+')'} : {}">
+                                        <svg ng-if="!b.ImageUrl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight:600;letter-spacing:0.04em">{{b.Name}}</div>
+                                    <div style="font-size:0.66rem;color:rgba(255,255,255,0.35);margin-top:0.15rem;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{b.Description || '—'}}</div>
+                                </td>
+                                <td style="color:rgba(255,255,255,0.55)">{{b.Cpu || '—'}}</td>
+                                <td style="color:rgba(255,255,255,0.55)">{{b.Gpu || '—'}}</td>
+                                <td style="font-weight:500">{{peso(b.Price)}}</td>
+                                <td style="color:rgba(255,255,255,0.6)">{{b.Stock}}</td>
+                                <td>
+                                    <span class="badge" ng-class="b.Active ? 'badge-active' : 'badge-inactive'">{{b.Active ? 'Active' : 'Inactive'}}</span>
+                                </td>
+                                <td>
+                                    <div class="table-actions">
+                                        <button class="action-btn" ng-click="openEditModal(b)">Edit</button>
+                                        <button class="action-btn danger" ng-click="deleteFunc(b.Id)">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            @* ORDERS panel *@
+            <div class="tab-panel" id="panel-orders" ng-class="{active: activeTab==='orders'}">
+                <div class="data-header">
+                    <span class="data-title">Orders</span>
+                    <input class="data-search" type="text" placeholder="Search orders..." ng-model="searchOrders" />
+                </div>
+                <div class="data-table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>User</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th style="width:120px;text-align:right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-tbody">
+                            <tr ng-if="(orders | filter:searchOrders).length===0" class="empty-row"><td colspan="6">No orders yet.</td></tr>
+                            <tr ng-repeat="o in orders | filter:searchOrders track by o.Id">
+                                <td style="font-family:Bebas Neue,sans-serif;letter-spacing:0.05em">BP-{{o.Id}}</td>
+                                <td>User #{{o.UserId}}</td>
+                                <td>{{peso(o.TotalAmount)}}</td>
+                                <td>
+                                    <select class="order-status-select"
+                                            ng-model="orderStatusDraft[o.Id]"
+                                            ng-options="opt.value as opt.label for opt in orderStatusSelectOptions"></select>
+                                </td>
+                                <td style="color:rgba(255,255,255,0.4)">{{toDate(o.CreatedAt)}}</td>
+                                <td style="text-align:right">
+                                    <button type="button"
+                                            class="action-btn primary"
+                                            ng-disabled="!orderStatusDirty(o)"
+                                            ng-click="applyOrderStatus(o)">Save</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            @* USERS panel *@
+            <div class="tab-panel" id="panel-users" ng-class="{active: activeTab==='users'}">
+                <div class="data-header">
+                    <span class="data-title">Registered Users</span>
+                    <input class="data-search" type="text" placeholder="Search users..." ng-model="searchUsers" />
+                </div>
+                <div class="data-table-wrap">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Joined</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-tbody">
+                            <tr ng-if="(users | filter:searchUsers).length===0" class="empty-row"><td colspan="7">No users found.</td></tr>
+                            <tr ng-repeat="u in users | filter:searchUsers track by u.Id">
+                                <td style="color:rgba(255,255,255,0.35)">{{$index + 1}}</td>
+                                <td>{{u.FirstName}} {{u.LastName}}</td>
+                                <td>&#64;{{u.Username}}</td>
+                                <td style="color:rgba(255,255,255,0.55)">{{u.Email}}</td>
+                                <td>
+                                    <span class="badge" ng-class="u.Role==='admin' ? 'badge-admin' : 'badge-user'">{{u.Role}}</span>
+                                </td>
+                                <td style="color:rgba(255,255,255,0.4)">{{toDate(u.CreatedAt)}}</td>
+                                <td>
+                                    <div class="table-actions">
+                                        <button class="action-btn" ng-click="toggleRole(u)">Change role</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>@* /dash-content *@
+
+        @* ===== ADD/EDIT BUILD MODAL (must live inside ng-controller scope) ===== *@
+        <div class="modal-bg" id="buildModal" ng-class="{open: buildModalOpen}" ng-click="closeModalOnBg($event)">
+            <div class="modal" ng-click="$event.stopPropagation()">
+
+                <div class="modal-header">
+                    <div class="modal-header-text">
+                        <div class="modal-eyebrow">{{buildForm.Id ? 'Editing build #' + buildForm.Id : 'New listing'}}</div>
+                        <p class="modal-title">{{buildForm.Id ? 'Edit build' : 'Add build'}}</p>
+                    </div>
+                    <button class="modal-close" ng-click="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+
+                    @* Left — image preview *@
+                    <div class="modal-image-col">
+                        <div class="image-preview-box" id="imgPreviewBox">
+                            <div class="image-preview-placeholder">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                                <span>No image</span>
+                            </div>
+                            <img id="imgPreviewEl" src="" alt="preview" />
+                        </div>
+                        <div class="form-row" style="margin-bottom:0">
+                            <label>Upload image</label>
+                            <input type="file" accept="image/*" onchange="angular.element(this).scope().onImageFileChange(this)" />
+                        </div>
+                        <div ng-if="isUploadingImage" style="font-size:0.6rem;color:rgba(255,255,255,0.35);letter-spacing:0.08em">
+                            Uploading...
+                        </div>
+                        <div ng-if="uploadImageErr" style="font-size:0.62rem;color:#ff7070;letter-spacing:0.04em;line-height:1.4">
+                            {{uploadImageErr}}
+                        </div>
+                        <div class="form-row" style="margin-bottom:0">
+                            <label>Image URL</label>
+                            <input type="text" placeholder="https://..." ng-model="buildForm.ImageUrl" ng-change="previewImage()" />
+                        </div>
+                        <p style="font-size:0.58rem;color:rgba(255,255,255,0.22);letter-spacing:0.06em;line-height:1.5">
+                            Paste a direct image link (JPG / PNG / WebP). Paste to preview.
+                        </p>
+                        <div class="form-row" style="margin-bottom:0">
+                            <label>Status</label>
+                            <select ng-model="buildForm.Active">
+                                <option ng-value="true">Active</option>
+                                <option ng-value="false">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    @* Right — fields *@
+                    <div class="modal-fields-col">
+                        <div class="form-section-label">Basic info</div>
+                        <div class="form-row"><label>Build name *</label><input type="text" placeholder="e.g. BEAST RANGER X" ng-model="buildForm.Name" /></div>
+                        <div class="form-row"><label>Description</label><textarea placeholder="Short description of the build..." ng-model="buildForm.Description"></textarea></div>
+                        <div class="form-row cols-2">
+                            <div class="form-row"><label>Price (PHP) *</label><input type="number" placeholder="0" ng-model="buildForm.Price" /></div>
+                            <div class="form-row"><label>Stock</label><input type="number" placeholder="0" ng-model="buildForm.Stock" /></div>
+                        </div>
+
+                        <div class="form-section-label">Specs</div>
+                        <div class="form-row cols-2">
+                            <div class="form-row"><label>CPU</label><input type="text" placeholder="e.g. Intel i9-14900K" ng-model="buildForm.Cpu" /></div>
+                            <div class="form-row"><label>GPU</label><input type="text" placeholder="e.g. RTX 4090" ng-model="buildForm.Gpu" /></div>
+                        </div>
+                        <div class="form-row cols-2">
+                            <div class="form-row"><label>RAM</label><input type="text" placeholder="e.g. 32GB DDR5" ng-model="buildForm.Ram" /></div>
+                            <div class="form-row"><label>Storage</label><input type="text" placeholder="e.g. 2TB NVMe SSD" ng-model="buildForm.Storage" /></div>
+                        </div>
+                        <div class="form-row cols-2">
+                            <div class="form-row"><label>Cooling</label><input type="text" placeholder="e.g. AIO 360mm" ng-model="buildForm.Cooling" /></div>
+                            <div class="form-row"><label>PSU</label><input type="text" placeholder="e.g. 850W Gold" ng-model="buildForm.Psu" /></div>
+                        </div>
+                        <div class="form-row">
+                            <label>Case</label>
+                            <input type="text" placeholder="e.g. NZXT H7 Flow" ng-model="buildForm.CaseName" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="action-btn" ng-click="closeModal()">Cancel</button>
+                    <button class="action-btn" ng-click="clearFunc()">Clear</button>
+                    <button class="action-btn primary" ng-click="buildForm.Id ? updateFunc() : addFunc()">
+                        {{buildForm.Id ? 'Save changes' : 'Add build'}}
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        @* ===== DASHBOARD CARD EDITOR ===== *@
+        <div class="modal-bg" id="cardModal" ng-class="{open: cardModalOpen}" ng-click="closeDashboardCardModal()">
+            <div class="modal" ng-click="$event.stopPropagation()" style="max-width:520px;">
+                <div class="modal-header">
+                    <div class="modal-header-text">
+                        <div class="modal-eyebrow">Dashboard</div>
+                        <p class="modal-title">{{cardEditor.Id ? 'Edit card' : 'Add card'}}</p>
+                    </div>
+                    <button type="button" class="modal-close" ng-click="closeDashboardCardModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="modal-fields-col" style="width:100%;">
+                        <div class="form-row cols-2">
+                            <div class="form-row">
+                                <label>Sort order</label>
+                                <input type="number" ng-model="cardEditor.SortOrder" />
+                            </div>
+                            <div class="form-row">
+                                <label>Active</label>
+                                <select ng-model="cardEditor.IsActive">
+                                    <option ng-value="true">Yes</option>
+                                    <option ng-value="false">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row"><label>Title *</label><input type="text" ng-model="cardEditor.Title" /></div>
+                        <div class="form-row"><label>Subtitle</label><input type="text" ng-model="cardEditor.Subtitle" /></div>
+                        <div class="form-row"><label>Accent (CSS rgba)</label><input type="text" ng-model="cardEditor.Accent" /></div>
+                        <div class="form-row">
+                            <label>Metric source</label>
+                            <select ng-model="cardEditor.MetricKey">
+                                <option value="builds">Total builds</option>
+                                <option value="orders">Total orders</option>
+                                <option value="users">Registered users</option>
+                                <option value="revenue">Revenue (delivered)</option>
+                                <option value="pending">Pending orders</option>
+                                <option value="literal">Literal text</option>
+                            </select>
+                        </div>
+                        <div class="form-row" ng-if="cardEditor.MetricKey==='literal'">
+                            <label>Literal value</label>
+                            <input type="text" ng-model="cardEditor.LiteralValue" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="action-btn" ng-click="closeDashboardCardModal()">Cancel</button>
+                    <button type="button" class="action-btn primary" ng-click="saveDashboardCardDef()">Save</button>
+                </div>
+            </div>
+        </div>
+
+        @* ===== ADMIN CONFIRM (replaces native confirm) ===== *@
+        <div class="admin-confirm-overlay"
+             ng-class="{open: adminConfirm.open}"
+             ng-click="onAdminConfirmBackdrop($event)"
+             aria-hidden="{{!adminConfirm.open}}">
+            <div class="admin-confirm-box" ng-click="$event.stopPropagation()" role="alertdialog">
+                <div class="admin-confirm-kicker">{{adminConfirm.title}}</div>
+                <p class="admin-confirm-msg">{{adminConfirm.message}}</p>
+                <div class="admin-confirm-actions">
+                    <button type="button" class="action-btn" ng-click="dismissAdminConfirm()">{{adminConfirm.cancelLabel}}</button>
+                    <button type="button"
+                            class="action-btn primary"
+                            ng-class="{'confirm-destructive': adminConfirm.destructive}"
+                            ng-click="acceptAdminConfirm()">{{adminConfirm.confirmLabel}}</button>
+                </div>
+            </div>
+        </div>
+
+    </div>@* /dash-main *@
+</div>@* /dash-shell *@
+
+@section scripts {
+    <script src="/Scripts/angular.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/angular-chart.js@1.1.1/dist/angular-chart.min.js"></script>
+    <script src="/Scripts/BeastPc/AdminModule.js"></script>
+    <script src="/Scripts/BeastPc/AdminService.js"></script>
+    <script src="/Scripts/BeastPc/AdminDashController.js"></script>
+    <script>
+        (function () {
+            var shell = document.getElementById("dashShell");
+            document.getElementById("sidebarToggle").addEventListener("click", function () {
+                shell.classList.toggle("collapsed");
+            });
+
+            function tick() {
+                var now = new Date();
+                var pad = function (n) { return n < 10 ? "0" + n : n; };
+                document.getElementById("topbarClock").textContent =
+                    pad(now.getHours()) + ":" + pad(now.getMinutes()) + ":" + pad(now.getSeconds());
+            }
+            tick();
+            setInterval(tick, 1000);
+
+            try {
+                var cur = JSON.parse(sessionStorage.getItem("CurrentUser") || "{}");
+                var initials = ((cur.FirstName || "?")[0] + (cur.LastName || "?")[0]).toUpperCase();
+                document.getElementById("sidebarAvatar").textContent = initials;
+                document.getElementById("sidebarName").textContent = (cur.FirstName || "") + " " + (cur.LastName || "");
+            } catch (e) { }
+
+            document.getElementById("logoutBtn").addEventListener("click", function () {
+                sessionStorage.removeItem("CurrentUser");
+                window.location.href = "/Account/LoginPage";
+            });
+        })();
+    </script>
+}

@@ -1,0 +1,347 @@
+================================================================================
+  BEASTPC REGISTRATION PAGE - EXPLANATION OF EVERY CODE WE MADE
+================================================================================
+
+This file explains each file and each important part so you understand how
+everything works together.
+
+
+--------------------------------------------------------------------------------
+1. MODULE.JS (Scripts/BeastPc/Module.js)
+--------------------------------------------------------------------------------
+
+  var app = angular.module("BeastPc", []);
+
+  WHAT IT DOES:
+  - Creates an AngularJS application named "BeastPc".
+  - The empty array [] means we are not using extra Angular modules (like ngRoute).
+  - We save it in "app" so we can use it in Service.js and Controller.js to
+    register the service and controller (app.service(...), app.controller(...)).
+
+  IN SIMPLE WORDS:
+  This is the "start" of our Angular app. Everything else (Service, Controller)
+  is attached to this app.
+
+
+--------------------------------------------------------------------------------
+2. SERVICE.JS (Scripts/BeastPc/Service.js)
+--------------------------------------------------------------------------------
+
+  The service holds the list of users (the array) and all the add/update/delete
+  logic. The controller only calls these functions; it does not hold the array.
+
+  app.service("BeastPCService", function () { ... });
+  - Registers a service named "BeastPCService". The controller will "inject"
+    this so it can call getUsers(), addUser(), updateUser(), deleteUser().
+
+  var users = [];
+  - The array where we store all user objects. It lives inside the service so
+    it stays in memory and is shared. When we add or delete, we change this array.
+
+  var nextId = 1;
+  - We give each new user an id: 1, 2, 3, ... This variable is the next number
+    we will use.
+
+  this.getUsers = function () { return users; }
+  - Returns the same "users" array. The controller does
+    $scope.users = BeastPCService.getUsers(), so the view's "users" is
+    this array. When we push or splice, the table updates because it's the
+    same array.
+
+  this.addUser = function (user) { ... }
+  - user.id = nextId;  then  nextId = nextId + 1;  --> Give this user the next id.
+  - users.push(user);  --> Add that user to the array. So "add user" = push
+    into the array.
+
+  this.updateUser = function (user) { ... }
+  - Loop over "users" and find the one with the same id (users[i].id === user.id).
+  - Copy fullName, email, username, and password (only if the user typed a new
+    password) from "user" into that element.
+  - break;  --> Stop after updating one. So "update" = find by id and overwrite.
+
+  this.deleteUser = function (id) { ... }
+  - Loop, find the user where users[i].id === id.
+  - users.splice(i, 1);  --> Remove that one element from the array.
+  - break;  --> Stop. So "delete" = find by id and remove one item.
+
+  IN SIMPLE WORDS:
+  The service is the "storage and rules" for the user list. It has the array
+  and the functions to add, update, and delete. No buttons, no form - just
+  data and logic.
+
+
+--------------------------------------------------------------------------------
+3. CONTROLLER.JS (Scripts/BeastPc/Controller.js)
+--------------------------------------------------------------------------------
+
+  The controller connects the view (form + table) to the service. When you
+  click a button or type in the form, the controller runs and calls the service.
+
+  app.controller("BeastPcController", function ($scope, BeastPCService) { ... });
+  - Registers the controller. $scope is what the view binds to (ng-model,
+    ng-click, etc.). BeastPCService is the service we inject so we can call
+    getUsers, addUser, updateUser, deleteUser.
+
+  $scope.users = BeastPCService.getUsers();
+  - Puts the service's "users" array on the scope. So in the view, "users" in
+    ng-repeat="u in users" is this array. When we add or delete in the service,
+    the table updates because it's the same array.
+
+  $scope.newUser = { fullName: "", email: "", username: "", password: "" };
+  - The object for the "new user" form. Each input has ng-model="newUser.fullName",
+    etc., so whatever you type goes into this object.
+
+  $scope.editUser = null;
+  - When we click "Edit" on a row, we put that user here. When we're not editing,
+    it's null. The view uses this to show either the row text or the edit inputs.
+
+  $scope.addUser = function () { ... }
+  - If username or password is empty, show an alert and return.
+  - BeastPCService.addUser(angular.copy($scope.newUser));  --> Copy the current
+    newUser (so we don't pass the same reference) and give it to the service to
+    push into the array.
+  - Then reset $scope.newUser to empty strings so the form clears.
+
+  $scope.startEdit = function (user) { ... }
+  - $scope.editUser = angular.copy(user);  --> Copy the clicked row's user
+    into editUser. The view then shows inputs for that row and binds them to
+    editUser.
+
+  $scope.saveEdit = function () { ... }
+  - If there's no editUser, return.
+  - BeastPCService.updateUser($scope.editUser);  --> Send the edited object to
+    the service so it finds the user by id and updates the array.
+  - $scope.editUser = null;  --> Turn off "edit mode" so the row shows text again.
+
+  $scope.cancelEdit = function () { ... }
+  - $scope.editUser = null;  --> Stop editing without saving.
+
+  $scope.deleteUser = function (id) { ... }
+  - confirm("Delete this user?")  --> Ask yes/no.
+  - If yes, BeastPCService.deleteUser(id);  --> Service finds that id in the
+    array and splices it out.
+
+  IN SIMPLE WORDS:
+  The controller is the "bridge" between the page (form and table) and the
+  service. Every button click and form action goes through the controller,
+  which then calls the service.
+
+
+--------------------------------------------------------------------------------
+4. ACCOUNTCONTROLLER.CS (Controllers/AccountController.cs)
+--------------------------------------------------------------------------------
+
+  This is the C# (server-side) controller. When someone goes to the
+  Registration URL, ASP.NET runs this and returns the Registration view.
+
+  using System.Web.Mvc;
+  - Needed for Controller, ActionResult, etc.
+
+  namespace BeastPc.Controllers
+  - Puts this class in the right namespace so the routing can find it.
+
+  public class AccountController : Controller
+  - This is the "Account" part of the URL (e.g. /Account/Registration).
+
+  public ActionResult Registration() { return View(); }
+  - The action name is "Registration".
+  - return View();  means: use the view that matches this action, which is
+    Views/Account/Registration.cshtml. We don't pass a model; the page is
+    driven by Angular on the client.
+
+  IN SIMPLE WORDS:
+  When you open the site and go to Registration, the server runs this method
+  and sends back the Registration.cshtml page. The server does not handle the
+  form or the list; Angular does that in the browser.
+
+
+--------------------------------------------------------------------------------
+5. _REGISTRATIONLAYOUT.CSHTML (Views/Shared/_RegistrationLayout.cshtml)
+--------------------------------------------------------------------------------
+
+  This is the "shell" for the Registration page: the HTML document, Tailwind,
+  the VT323 font, and our custom styles. The actual page content is injected
+  where we put @RenderBody().
+
+  <!DOCTYPE html> ... <html> <head> ... </head> <body>
+  - Normal HTML document structure.
+
+  @ViewBag.Title
+  - The title of the page. The view (Registration.cshtml) sets
+    ViewBag.Title = "Registration", so the browser tab shows "Registration - BeastPc".
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  - Loads Tailwind CSS so we can use classes like flex, bg-white, border-2, etc.
+
+  @@import url('...VT323...')
+  - Loads the VT323 font from Google Fonts. We use @@ so that Razor outputs
+    a single @ in the CSS (in Razor, @ is special).
+
+  :root { --bg-color: #ffffff; --text-color: #000000; --border-color: #000000; }
+  - CSS variables so we can change colors in one place.
+
+  body { font-family: 'VT323', ... }
+  - Makes the whole page use the VT323 font.
+
+  .custom-font-title, .custom-font-subtitle, .custom-font-body,
+  .custom-font-button, .custom-font-label
+  - Extra classes so titles, labels, and inputs use VT323 and the right
+    size and spacing (FarmScout-style).
+
+  input[type="text"], input[type="email"], input[type="password"] { ... }
+  - Styles all text/email/password inputs: black border, no rounded corners,
+    VT323 font, etc.
+
+  .btn-beast
+  - Black background, white text, black border. On hover: white background,
+    black text. Used for the main "Register" button and "Save" / "Delete".
+
+  .btn-beast-secondary
+  - White background, black border. Used for "Edit" and "Cancel".
+
+  table.beast-table
+  - Table with black borders and VT323. Header row gets a light gray background.
+  - Inputs inside the table get a max-width so they don't stretch too much.
+
+  @RenderBody()
+  - This is where the content of the view (Registration.cshtml) is inserted.
+    So the layout wraps the page.
+
+  @RenderSection("scripts", required: false)
+  - If the view defines a @section scripts { ... }, that block is rendered here.
+    So Angular and our scripts load at the end of the body. required: false
+    means other views that use this layout don't have to define scripts.
+
+  IN SIMPLE WORDS:
+  The layout is the "frame": same HTML, CSS, and font for the Registration
+  page. The real content (form and table) comes from Registration.cshtml and
+  is put where @RenderBody() is.
+
+
+--------------------------------------------------------------------------------
+6. REGISTRATION.CSHTML (Views/Account/Registration.cshtml)
+--------------------------------------------------------------------------------
+
+  This is the actual Registration page: form on the left, table on the right,
+  and all the Angular bindings.
+
+  @{ ViewBag.Title = "Registration"; Layout = "~/Views/Shared/_RegistrationLayout.cshtml"; }
+  - Sets the browser title and says "use _RegistrationLayout as the shell."
+
+  <div ... ng-app="BeastPc" ng-controller="BeastPcController">
+  - ng-app="BeastPc"  --> This div is the root of the BeastPc Angular app (must
+    match the module name in Module.js).
+  - ng-controller="BeastPcController"  --> Everything inside uses BeastPcController's
+    $scope (users, newUser, addUser, startEdit, saveEdit, cancelEdit, deleteUser).
+
+  LEFT PANEL (form):
+  - Back button: Link to the home page (Url.Action("Index", "Home")).
+  - Title: "Registration" and "Add users and manage them below."
+  - Inputs: Each has ng-model="newUser.fullName", newUser.email, newUser.username,
+    newUser.password. So they are bound to the controller's $scope.newUser.
+  - Register button: ng-click="addUser()" runs the controller's addUser()
+    (which calls the service and clears the form).
+
+  RIGHT PANEL (table):
+  - Headers: Id, Full Name, Email, Username, Actions.
+  - <tr ng-repeat="u in users">  --> One row per user in $scope.users (the
+    array from the service).
+  - Cells:
+    - {{ u.id }}, {{ u.fullName }}, etc.  --> Show the user's data.
+    - ng-hide="editUser && editUser.id === u.id"  --> Hide the normal text
+      when this row is being edited.
+    - ng-show="editUser && editUser.id === u.id"  --> Show the input only for
+      the row we're editing; ng-model="editUser.fullName" etc. bind to the
+      copy we're editing.
+  - Edit button: ng-click="startEdit(u)" puts that user into editUser.
+  - Delete button: ng-click="deleteUser(u.id)" asks for confirm then calls the
+    controller's deleteUser(id).
+  - Save button: ng-click="saveEdit()" calls the service's updateUser and
+    clears editUser.
+  - Cancel button: ng-click="cancelEdit()" just sets editUser to null.
+  - ng-if="users.length === 0"  --> One row that shows "No users yet." when
+    the array is empty.
+
+  @section scripts { ... }
+  - Load Angular, then Module.js, Service.js, Controller.js. Order matters:
+    Module first, then Service (uses app), then Controller (uses app and
+    BeastPCService).
+
+  IN SIMPLE WORDS:
+  This view is the "page": it says which layout to use and contains the form,
+  the table, and all the ng-model and ng-click that connect to the controller.
+  When you click or type, Angular runs the controller, which calls the service,
+  and the table updates because it's bound to the same array.
+
+
+--------------------------------------------------------------------------------
+7. ROUTECONFIG.CS (App_Start/RouteConfig.cs)
+--------------------------------------------------------------------------------
+
+  This tells ASP.NET how URLs map to controllers and actions. We set the
+  "default" so that when you open the site with no path, it goes to Registration.
+
+  routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+  - Do not treat .axd requests as MVC routes (used for things like script
+    bundles).
+
+  routes.MapRoute(
+    name: "Default",
+    url: "{controller}/{action}/{id}",
+    defaults: new { controller = "Account", action = "Registration", id = UrlParameter.Optional }
+  );
+  - url: "{controller}/{action}/{id}"  --> So URLs look like /Account/Registration
+    or /Home/Index.
+  - defaults: If you don't specify controller or action (e.g. you go to /), use
+    controller = "Account" and action = "Registration". So the "home" URL
+    shows the Registration page.
+
+  IN SIMPLE WORDS:
+  When you open the site root (e.g. http://localhost:xxxxx/), the default
+  route sends you to AccountController, Registration action, which returns
+  Registration.cshtml. So the app "starts" on the Registration page.
+
+
+================================================================================
+  HOW IT ALL WORKS TOGETHER (STEP BY STEP)
+================================================================================
+
+1. You open the site  -->  RouteConfig says "default = Account/Registration".
+
+2. ASP.NET runs AccountController.Registration()  -->  It returns the view
+   Registration.cshtml.
+
+3. Registration.cshtml uses _RegistrationLayout.cshtml as its shell  -->  So
+   you get the layout's HTML, Tailwind, VT323 font, and styles.
+
+4. The browser loads the page. At the bottom, the @section scripts loads
+   Angular, then Module.js, Service.js, Controller.js.
+
+5. Angular starts: Module.js creates the app "BeastPc". Service.js creates the
+   "users" array and the add/update/delete functions. Controller.js gets the
+   array from the service (getUsers) and puts it on $scope.users, and sets up
+   newUser, addUser, startEdit, saveEdit, cancelEdit, deleteUser.
+
+6. You type in the form  -->  ng-model updates $scope.newUser. You click
+   Register  -->  addUser() runs, calls BeastPCService.addUser(), which
+   pushes the user into the array. Because $scope.users is that same array,
+   the table updates automatically.
+
+7. You click Edit on a row  -->  startEdit(u) copies that user into
+   $scope.editUser. The view shows inputs for that row (ng-show when
+   editUser.id === u.id). You change the text and click Save  -->  saveEdit()
+   runs, calls BeastPCService.updateUser(editUser), which finds the user by
+   id and updates it in the array. Then editUser is set to null, so the row
+   shows text again.
+
+8. You click Delete  -->  confirm dialog. If yes, BeastPCService.deleteUser(id)
+   splices that user out of the array. The row disappears from the table.
+
+That is the full flow: RouteConfig  -->  AccountController  -->  View and
+Layout  -->  Angular (Module, Service, Controller)  -->  Form and table
+bound to the same array and the same functions.
+
+
+================================================================================
+  END OF EXPLANATION
+================================================================================

@@ -1,0 +1,753 @@
+@{
+    ViewBag.Title = "Checkout";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+
+@Html.Partial("_BeastNav")
+
+<style>
+    body { background: #000; color: #fff; }
+    .checkout-page {
+        min-height: 100vh;
+        padding: 7rem 2.5rem 4rem 2.5rem;
+        font-family: 'Inter Display', system-ui, sans-serif;
+    }
+    .checkout-wrap {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    .checkout-eyebrow {
+        font-size: 0.7rem;
+        letter-spacing: 0.3em;
+        color: rgba(255,255,255,0.5);
+        text-transform: uppercase;
+    }
+    .checkout-title {
+        font-family: 'OrithDisplay', cursive;
+        font-size: clamp(3rem, 7vw, 5.5rem);
+        letter-spacing: 0.06em;
+        line-height: 0.9;
+        margin: 0.4rem 0 2.6rem 0;
+        text-transform: uppercase;
+    }
+    .checkout-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 2.5rem;
+    }
+    .panel {
+        background: #0b0b0b;
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 14px;
+        padding: 1.6rem 1.8rem;
+    }
+    .panel h3 {
+        margin: 0 0 1.2rem 0;
+        font-size: 0.78rem;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.85);
+    }
+    .form-row { display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 1rem; }
+    .form-row.cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-row label {
+        font-size: 0.66rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.55);
+    }
+    .form-row input, .form-row select, .form-row textarea {
+        background: #050505;
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #fff;
+        padding: 0.75rem 0.9rem;
+        font-family: inherit;
+        font-size: 0.82rem;
+        letter-spacing: 0.02em;
+        border-radius: 6px;
+        outline: none;
+        transition: border-color 0.2s ease;
+    }
+    .form-row input:focus, .form-row select:focus, .form-row textarea:focus { border-color: rgba(255,255,255,0.4); }
+    .pay-methods { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .pay-method {
+        flex: 1 1 auto;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.85rem 1rem;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.72rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.75);
+        transition: all 0.2s ease;
+    }
+    .pay-method:hover { border-color: rgba(255,255,255,0.25); color: #fff; }
+    .pay-method input { accent-color: #fff; }
+    .pay-method.active { border-color: #fff; color: #fff; background: rgba(255,255,255,0.03); }
+
+    /* Summary */
+    .summary-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 1rem 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        max-height: 340px;
+        overflow-y: auto;
+    }
+    .summary-item {
+        display: grid;
+        grid-template-columns: 48px 1fr auto;
+        gap: 0.75rem;
+        align-items: center;
+        padding: 0.55rem;
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 8px;
+    }
+    .summary-thumb {
+        width: 48px; height: 48px; border-radius: 6px;
+        background-size: cover; background-position: center;
+    }
+    .summary-item__body { display: flex; flex-direction: column; gap: 0.18rem; min-width: 0; }
+    .summary-item__name {
+        font-size: 0.7rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .summary-item__meta {
+        font-size: 0.62rem;
+        color: rgba(255,255,255,0.45);
+        letter-spacing: 0.04em;
+    }
+    .summary-item__price {
+        font-family: 'Bebas Neue', system-ui, sans-serif;
+        font-size: 1.1rem;
+        letter-spacing: 0.04em;
+    }
+
+    .totals-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.55rem 0;
+        font-size: 0.74rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.7);
+    }
+    .totals-row.grand {
+        border-top: 1px solid rgba(255,255,255,0.1);
+        margin-top: 0.4rem;
+        padding-top: 0.9rem;
+        color: #fff;
+    }
+    .totals-row.grand .val {
+        font-family: 'Bebas Neue', system-ui, sans-serif;
+        font-size: 1.8rem;
+        letter-spacing: 0.05em;
+    }
+
+    .place-order-btn {
+        margin-top: 1.4rem;
+        width: 100%;
+        padding: 1.05rem 1rem;
+        background: #fff;
+        color: #000;
+        border: none;
+        border-radius: 999px;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 0.72rem;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .place-order-btn:hover { background: rgba(255,255,255,0.88); transform: translateY(-1px); }
+    .place-order-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: rgba(255,255,255,0.55);
+        text-decoration: none;
+        font-size: 0.68rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        margin-top: 1.2rem;
+    }
+    .back-link:hover { color: #fff; }
+
+    .empty-cart {
+        text-align: center;
+        padding: 5rem 0;
+    }
+    .empty-cart h2 {
+        font-family: 'OrithDisplay', cursive;
+        font-size: 3rem;
+        letter-spacing: 0.08em;
+        margin: 0 0 0.8rem 0;
+        text-transform: uppercase;
+    }
+    .empty-cart p { color: rgba(255,255,255,0.55); margin: 0 0 1.6rem 0; }
+    .empty-cart a {
+        display: inline-block;
+        padding: 0.9rem 2rem;
+        background: #fff;
+        color: #000;
+        border-radius: 999px;
+        text-decoration: none;
+        font-size: 0.7rem;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+    }
+
+    /* Success */
+    .success-screen {
+        position: fixed;
+        inset: 0;
+        background: #000;
+        z-index: 200;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        padding: 2rem;
+    }
+    .success-screen.show { display: flex; }
+    .success-check {
+        width: 4.5rem;
+        height: 4.5rem;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin-bottom: 1.4rem;
+        color: #fff;
+        animation: pop 0.55s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @@keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+    .success-title {
+        font-family: 'OrithDisplay', cursive;
+        font-size: clamp(3rem, 7vw, 5.5rem);
+        letter-spacing: 0.08em;
+        margin: 0 0 0.6rem 0;
+        text-transform: uppercase;
+    }
+    .success-sub {
+        color: rgba(255,255,255,0.6);
+        font-size: 0.8rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        margin: 0 0 0.4rem 0;
+    }
+    .success-order {
+        font-family: 'Bebas Neue', system-ui, sans-serif;
+        font-size: 1.6rem;
+        letter-spacing: 0.08em;
+        color: #fff;
+        margin-bottom: 2rem;
+    }
+    .success-actions { display: flex; gap: 0.8rem; }
+    .success-actions a {
+        padding: 0.85rem 1.8rem;
+        border-radius: 999px;
+        text-decoration: none;
+        font-size: 0.68rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+    }
+    .success-actions a.primary { background: #fff; color: #000; }
+    .success-actions a.secondary { border: 1px solid rgba(255,255,255,0.25); color: #fff; }
+    .success-actions a.secondary:hover { background: rgba(255,255,255,0.05); }
+
+    /* Modal (login required / errors) */
+    .checkout-modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 260;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(1.25rem, 4vw, 2rem);
+        background: rgba(0,0,0,0.78);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+    .checkout-modal-overlay.is-open { display: flex; }
+    .checkout-modal-dialog {
+        position: relative;
+        width: 100%;
+        max-width: 420px;
+        background: linear-gradient(165deg, #121212 0%, #0a0a0a 100%);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px;
+        box-shadow: 0 28px 80px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.06) inset;
+        padding: clamp(1.65rem, 4vw, 2.25rem);
+    }
+    .checkout-modal-accent {
+        position: absolute;
+        left: 0;
+        top: 1rem;
+        bottom: 1rem;
+        width: 3px;
+        border-radius: 0 3px 3px 0;
+        background: linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0.12));
+        opacity: 0.85;
+        pointer-events: none;
+    }
+    .checkout-modal-close {
+        position: absolute;
+        top: 0.85rem;
+        right: 0.95rem;
+        width: 2rem;
+        height: 2rem;
+        border: none;
+        background: transparent;
+        color: rgba(255,255,255,0.45);
+        font-size: 1.35rem;
+        line-height: 1;
+        cursor: pointer;
+        transition: color 0.15s ease;
+        border-radius: 6px;
+    }
+    .checkout-modal-close:hover { color: #fff; background: rgba(255,255,255,0.06); }
+
+    .checkout-modal-kicker {
+        font-size: 0.62rem;
+        letter-spacing: 0.38em;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.42);
+        margin: 0 0 0.75rem 0;
+        padding-left: 0.35rem;
+    }
+    .checkout-modal-title {
+        font-family: 'OrithDisplay', cursive;
+        font-size: clamp(1.45rem, 4.2vw, 2rem);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #fff;
+        margin: 0 0 0.85rem 0;
+        line-height: 1.15;
+        padding-right: 2rem;
+    }
+    .checkout-modal-body {
+        font-size: 0.78rem;
+        line-height: 1.55;
+        letter-spacing: 0.04em;
+        color: rgba(255,255,255,0.58);
+        margin: 0 0 1.6rem 0;
+    }
+
+    .checkout-modal-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.65rem;
+    }
+    .checkout-modal-actions button {
+        flex: 1 1 auto;
+        min-width: 8rem;
+        padding: 0.82rem 1.1rem;
+        border-radius: 999px;
+        font-family: inherit;
+        font-size: 0.65rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        cursor: pointer;
+        border: none;
+        transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+    }
+    .checkout-modal-btn-primary {
+        background: #ededed;
+        color: #0a0a0a;
+    }
+    .checkout-modal-btn-primary:hover { background: #fff; }
+
+    .checkout-modal-btn-secondary {
+        background: transparent;
+        border: 1px solid rgba(255,255,255,0.18) !important;
+        color: rgba(255,255,255,0.85);
+    }
+    .checkout-modal-btn-secondary:hover { border-color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.04); }
+
+    /* Gradient thumbs (mirror the Shop page) */
+    .thumb-beast-ranger  { background-image: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), transparent 55%), radial-gradient(circle at 70% 70%, rgba(255,59,59,0.15), transparent 55%), linear-gradient(135deg, #1a1a1a, #050505); }
+    .thumb-elite-phantom { background-image: radial-gradient(circle at 60% 20%, rgba(0,229,255,0.12), transparent 55%), linear-gradient(135deg, #0f0f12, #05060a); }
+    .thumb-nightfall-pro { background-image: radial-gradient(circle at 40% 60%, rgba(127,93,255,0.14), transparent 55%), linear-gradient(135deg, #111012, #070608); }
+    .thumb-streamforge   { background-image: radial-gradient(circle at 20% 80%, rgba(255,159,28,0.14), transparent 55%), linear-gradient(135deg, #141212, #080606); }
+    .thumb-creator-prime { background-image: radial-gradient(circle at 70% 40%, rgba(0,255,170,0.10), transparent 55%), linear-gradient(135deg, #0c1210, #050707); }
+    .thumb-compact-strike{ background-image: radial-gradient(circle at 30% 70%, rgba(255,200,0,0.10), transparent 55%), linear-gradient(135deg, #161310, #070605); }
+</style>
+
+<main class="checkout-page">
+    <div class="checkout-wrap">
+        <div id="checkout-main">
+            <span class="checkout-eyebrow">BEASTPC / CHECKOUT</span>
+            <h1 class="checkout-title">Complete your order</h1>
+
+            <div class="checkout-grid">
+                <section class="checkout-left">
+                    <div class="panel">
+                        <h3>Contact</h3>
+                        <p id="contact-account-hint" style="display:none;font-size:0.68rem;color:rgba(255,255,255,0.45);letter-spacing:0.06em;margin:-0.4rem 0 0.9rem 0;">Name and email are filled from your account. Add a phone number so we can reach you about delivery.</p>
+                        <div class="form-row cols-2">
+                            <div class="form-row">
+                                <label for="first-name">First name</label>
+                                <input id="first-name" type="text" placeholder="John" />
+                            </div>
+                            <div class="form-row">
+                                <label for="last-name">Last name</label>
+                                <input id="last-name" type="text" placeholder="Dela Cruz" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label for="email">Email</label>
+                            <input id="email" type="email" placeholder="you@example.com" />
+                        </div>
+                        <div class="form-row">
+                            <label for="phone">Phone</label>
+                            <input id="phone" type="tel" placeholder="+63 9xx xxx xxxx" />
+                        </div>
+                    </div>
+
+                    <div class="panel" style="margin-top: 1rem;">
+                        <h3>Shipping</h3>
+                        <div class="form-row">
+                            <label for="addr">Address</label>
+                            <input id="addr" type="text" placeholder="Street, building" />
+                        </div>
+                        <div class="form-row cols-2">
+                            <div class="form-row">
+                                <label for="city">City</label>
+                                <input id="city" type="text" placeholder="City" />
+                            </div>
+                            <div class="form-row">
+                                <label for="zip">ZIP</label>
+                                <input id="zip" type="text" placeholder="ZIP code" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel" style="margin-top: 1rem;">
+                        <h3>Payment</h3>
+                        <div class="pay-methods">
+                            <label class="pay-method active">
+                                <input type="radio" name="pay" value="card" checked />
+                                Card
+                            </label>
+                            <label class="pay-method">
+                                <input type="radio" name="pay" value="gcash" />
+                                GCash
+                            </label>
+                            <label class="pay-method">
+                                <input type="radio" name="pay" value="cod" />
+                                Cash on delivery
+                            </label>
+                        </div>
+                    </div>
+
+                    <a class="back-link" href="@Url.Action("Shop", "Home")">&larr; Back to shop</a>
+                </section>
+
+                <aside class="checkout-right">
+                    <div class="panel">
+                        <h3>Order summary</h3>
+                        <ul class="summary-list" id="summary-list"></ul>
+
+                        <div class="totals-row">
+                            <span>Subtotal</span>
+                            <span class="val" id="sum-subtotal">&#8369;0</span>
+                        </div>
+                        <div class="totals-row">
+                            <span>Shipping</span>
+                            <span class="val" id="sum-shipping">&#8369;500</span>
+                        </div>
+                        <div class="totals-row">
+                            <span>Tax (12%)</span>
+                            <span class="val" id="sum-tax">&#8369;0</span>
+                        </div>
+                        <div class="totals-row grand">
+                            <span>Total</span>
+                            <span class="val" id="sum-total">&#8369;0</span>
+                        </div>
+
+                        <button type="button" class="place-order-btn" id="place-order">Place order</button>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <div id="empty-cart" class="empty-cart" style="display:none;">
+            <h2>Your cart is empty</h2>
+            <p>Add a system to your cart to start checkout.</p>
+            <a href="@Url.Action("Shop", "Home")">Browse PCs</a>
+        </div>
+    </div>
+</main>
+
+<div class="success-screen" id="success-screen" role="dialog" aria-modal="true" aria-labelledby="success-title">
+    <div class="success-check">&check;</div>
+    <h2 class="success-title" id="success-title">Order placed</h2>
+    <p class="success-sub">We&rsquo;ve received your order</p>
+    <p class="success-order" id="success-order-id">&mdash;</p>
+    <div class="success-actions">
+        <a class="primary" href="@Url.Action("Shop", "Home")">Continue shopping</a>
+        <a class="secondary" href="@Url.Action("Index", "Home")">Home</a>
+    </div>
+</div>
+
+<div id="checkout-modal" class="checkout-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="checkout-modal-title" aria-hidden="true">
+    <div class="checkout-modal-dialog">
+        <span class="checkout-modal-accent" aria-hidden="true"></span>
+        <button type="button" id="checkout-modal-close" class="checkout-modal-close" aria-label="Close dialog">&times;</button>
+        <p class="checkout-modal-kicker" id="checkout-modal-kicker">BeastPC</p>
+        <h2 id="checkout-modal-title" class="checkout-modal-title">Checkout</h2>
+        <p id="checkout-modal-body" class="checkout-modal-body"></p>
+        <div class="checkout-modal-actions">
+            <button type="button" id="checkout-modal-primary" class="checkout-modal-btn-primary">OK</button>
+            <button type="button" id="checkout-modal-secondary" class="checkout-modal-btn-secondary">Cancel</button>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+<script>
+    (function () {
+        var CART_STORAGE_KEY = 'beastpc_cart';
+        var items = [];
+        try {
+            var raw = sessionStorage.getItem(CART_STORAGE_KEY);
+            if (raw) items = JSON.parse(raw) || [];
+        } catch (e) { items = []; }
+
+        var mainEl = document.getElementById('checkout-main');
+        var emptyEl = document.getElementById('empty-cart');
+        var listEl = document.getElementById('summary-list');
+        var subEl = document.getElementById('sum-subtotal');
+        var shipEl = document.getElementById('sum-shipping');
+        var taxEl = document.getElementById('sum-tax');
+        var totEl = document.getElementById('sum-total');
+        var placeBtn = document.getElementById('place-order');
+
+        var modalEl = document.getElementById('checkout-modal');
+        var modalTitle = document.getElementById('checkout-modal-title');
+        var modalBody = document.getElementById('checkout-modal-body');
+        var modalPrimary = document.getElementById('checkout-modal-primary');
+        var modalSecondary = document.getElementById('checkout-modal-secondary');
+        var modalClose = document.getElementById('checkout-modal-close');
+        var modalKicker = document.getElementById('checkout-modal-kicker');
+        var loginPageUrl = '@Url.Action("LoginPage", "Account")';
+
+        var checkoutRecover = null;
+
+        function peso(v) { return '\u20B1' + Number(v || 0).toLocaleString(); }
+
+        function lockScroll(lock) {
+            document.body.style.overflow = lock ? 'hidden' : '';
+        }
+
+        function closeCheckoutModal() {
+            modalEl.classList.remove('is-open');
+            modalEl.setAttribute('aria-hidden', 'true');
+            lockScroll(false);
+            modalPrimary.onclick = null;
+            modalSecondary.onclick = null;
+            if (checkoutRecover) {
+                var rec = checkoutRecover;
+                checkoutRecover = null;
+                try { rec(); } catch (e) { /* ignore */ }
+            }
+        }
+
+        function openCheckoutModal(opts) {
+            opts = opts || {};
+            checkoutRecover = typeof opts.recover === 'function' ? opts.recover : null;
+
+            modalTitle.textContent = opts.title || 'Notice';
+            modalBody.textContent = opts.body || '';
+            if (modalKicker) modalKicker.textContent = opts.kicker != null ? opts.kicker : 'BeastPC';
+
+            modalPrimary.textContent = opts.primaryLabel || 'OK';
+            modalPrimary.onclick = function () {
+                if (opts.onPrimary) opts.onPrimary();
+                else closeCheckoutModal();
+            };
+
+            var showSecondary = opts.showSecondary !== false;
+            modalSecondary.style.display = showSecondary ? '' : 'none';
+            modalSecondary.textContent = opts.secondaryLabel || 'Cancel';
+            modalSecondary.onclick = function () {
+                if (opts.onSecondary) opts.onSecondary();
+                else closeCheckoutModal();
+            };
+
+            modalEl.classList.add('is-open');
+            modalEl.setAttribute('aria-hidden', 'false');
+            lockScroll(true);
+            modalPrimary.focus();
+        }
+
+        if (modalClose) modalClose.addEventListener('click', closeCheckoutModal);
+        modalEl.addEventListener('click', function (e) {
+            if (e.target === modalEl) closeCheckoutModal();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && modalEl.classList.contains('is-open')) closeCheckoutModal();
+        });
+
+        function render() {
+            if (!items.length) {
+                mainEl.style.display = 'none';
+                emptyEl.style.display = 'block';
+                return;
+            }
+            mainEl.style.display = 'block';
+            emptyEl.style.display = 'none';
+
+            listEl.innerHTML = '';
+            var subtotal = 0;
+            items.forEach(function (it) {
+                subtotal += Number(it.price) * Number(it.quantity);
+                var li = document.createElement('li');
+                li.className = 'summary-item';
+                var thumbStyle = '';
+                if (it.thumbUrl) thumbStyle = ' style="background-image:url(' + it.thumbUrl + ')"';
+                li.innerHTML =
+                    '<div class="summary-thumb"' + thumbStyle + '></div>' +
+                    '<div class="summary-item__body">' +
+                        '<span class="summary-item__name">' + it.name + '</span>' +
+                        '<span class="summary-item__meta">Qty ' + it.quantity + ' &middot; ' + peso(it.price) + ' each</span>' +
+                    '</div>' +
+                    '<span class="summary-item__price">' + peso(Number(it.price) * Number(it.quantity)) + '</span>';
+                listEl.appendChild(li);
+            });
+
+            var shipping = 500;
+            var tax = Math.round(subtotal * 0.12);
+            var total = subtotal + shipping + tax;
+
+            subEl.textContent  = peso(subtotal);
+            shipEl.textContent = peso(shipping);
+            taxEl.textContent  = peso(tax);
+            totEl.textContent  = peso(total);
+        }
+
+        // Radio-style active state for payment methods
+        document.querySelectorAll('.pay-method').forEach(function (el) {
+            el.addEventListener('click', function () {
+                document.querySelectorAll('.pay-method').forEach(function (p) { p.classList.remove('active'); });
+                el.classList.add('active');
+                var r = el.querySelector('input[type="radio"]');
+                if (r) r.checked = true;
+            });
+        });
+
+        function getCurrentUserId() {
+            try {
+                var cur = JSON.parse(sessionStorage.getItem('CurrentUser') || '{}');
+                return Number(cur.Id || 0);
+            } catch (e) { return 0; }
+        }
+
+        function prefillCheckoutFromAccount() {
+            var uid = getCurrentUserId();
+            if (!uid) return;
+            try {
+                var cur = JSON.parse(sessionStorage.getItem('CurrentUser') || '{}');
+                var fn = document.getElementById('first-name');
+                var ln = document.getElementById('last-name');
+                var em = document.getElementById('email');
+                if (fn && (cur.FirstName || cur.FName)) fn.value = (cur.FirstName || cur.FName || '').trim();
+                if (ln && (cur.LastName || cur.LName)) ln.value = (cur.LastName || cur.LName || '').trim();
+                if (em && cur.Email) {
+                    em.value = String(cur.Email).trim();
+                    em.readOnly = true;
+                    em.setAttribute('title', 'Taken from your BeastPC account');
+                }
+                var hint = document.getElementById('contact-account-hint');
+                if (hint) hint.style.display = 'block';
+            } catch (e) { /* ignore */ }
+        }
+
+        prefillCheckoutFromAccount();
+
+        // Place order (real DB write)
+        placeBtn.addEventListener('click', function () {
+            if (!items.length) return;
+            var uid = getCurrentUserId();
+            if (!uid) {
+                openCheckoutModal({
+                    title: 'Sign in to continue',
+                    body: 'Checkout is tied to your BeastPC account. Log in so we can record your order and send updates.',
+                    kicker: 'Account',
+                    primaryLabel: 'Log in',
+                    secondaryLabel: 'Stay on checkout',
+                    onPrimary: function () {
+                        closeCheckoutModal();
+                        var q = '?ReturnUrl=' + encodeURIComponent(window.location.pathname + window.location.search);
+                        window.location.href = loginPageUrl + q;
+                    },
+                    onSecondary: function () {
+                        closeCheckoutModal();
+                    }
+                });
+                return;
+            }
+            placeBtn.disabled = true;
+            placeBtn.textContent = 'Processing...';
+
+            var payload = {
+                UserId: uid,
+                Items: items.map(function (it) {
+                    return {
+                        BuildId: Number(it.buildId || 0),
+                        Quantity: Number(it.quantity || 0),
+                        UnitPrice: Number(it.price || 0)
+                    };
+                }).filter(function (x) { return x.BuildId > 0 && x.Quantity > 0; })
+            };
+
+            fetch('@Url.Action("PlaceOrder", "BeastPc")', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (j) {
+                if (!j || !j.ok) throw new Error((j && j.error) ? j.error : 'Order failed.');
+                document.getElementById('success-order-id').textContent = 'BP-' + j.orderId;
+                document.getElementById('success-screen').classList.add('show');
+                sessionStorage.removeItem(CART_STORAGE_KEY);
+            })
+            .catch(function (err) {
+                openCheckoutModal({
+                    title: 'Order not placed',
+                    body: (err && err.message) ? err.message : 'Something went wrong. Please try again.',
+                    kicker: 'Checkout',
+                    primaryLabel: 'OK',
+                    showSecondary: false,
+                    onPrimary: function () {
+                        closeCheckoutModal();
+                    },
+                    recover: function () {
+                        placeBtn.disabled = false;
+                        placeBtn.textContent = 'Place order';
+                    }
+                });
+            });
+        });
+
+        render();
+    })();
+</script>
+}
