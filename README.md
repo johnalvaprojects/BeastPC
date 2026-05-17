@@ -16,8 +16,6 @@ E-commerce site for **ready-to-ship gaming PCs**: browse builds, cart, checkout,
 
 ## Screenshots
 
-Run the site locally with videos in `BeastPc/Content/video/` for the full look.
-
 | Home | Login |
 |:---:|:---:|
 | ![Home page](docs/screenshots/home.png) | ![Login page](docs/screenshots/login.png) |
