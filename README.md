@@ -3,6 +3,7 @@
 [![ASP.NET](https://img.shields.io/badge/ASP.NET-512BD4?style=flat&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![C#](https://img.shields.io/badge/C%23-239120?style=flat&logo=c-sharp&logoColor=white)](https://learn.microsoft.com/dotnet/csharp/)
 [![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![AngularJS](https://img.shields.io/badge/AngularJS-E23237?style=flat&logo=angular&logoColor=white)](https://angularjs.org/)
 
 **BeastPC** is a full-stack **e-commerce web application** for **ready-to-ship gaming PCs**: catalog, cart, checkout, user accounts, and an admin area for builds and orders. Built as an **ASP.NET MVC / web frameworks** coursework project — clone, run locally, and extend.
 
